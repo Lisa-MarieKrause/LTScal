@@ -3,7 +3,6 @@ import logging
 logging.basicConfig(filename='/home/Lii544/Projects/LTScal/pythonanywhere.log',level=logging.DEBUG)
 logging.debug(' Loaded logging module')
 from datetime import datetime
-logging.debug( ': Loaded datetime')
 import locale
 logging.debug(': Loaded locale')
 import os
