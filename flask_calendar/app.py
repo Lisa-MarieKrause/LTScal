@@ -58,6 +58,7 @@ def create_app(config_overrides: Dict = None):
         mac = hmac.new(encoded_key, msg=data, digestmod=algorithm)
         return hmac.compare_digest(mac.hexdigest(), github_signature)
     
+    #TODO: add more checks (see W10 Github Actions)
     def webhook():
         logging.debug("starting webhook()")
         abort_code = 418
@@ -77,7 +78,8 @@ def create_app(config_overrides: Dict = None):
         else:
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
-
+            
+    # TODO: think about a solution how to split between public and coach
     def index():
         return flask.redirect("/sample/")
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
@@ -89,9 +91,9 @@ def create_app(config_overrides: Dict = None):
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
     app.add_url_rule("/", "index", index, methods=["GET"])
     #app.add_url_rule("/", "index_action", index_action, methods=["GET"])
-    #app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
-    #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
-    #app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
+    app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
+    app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
+    app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
 
     app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
     app.add_url_rule(
