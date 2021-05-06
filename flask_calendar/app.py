@@ -1,27 +1,16 @@
 #!/usr/bin/python3
 import logging
 logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
-logging.debug(' Loaded logging module')
 from datetime import datetime
 import locale
-logging.debug(': Loaded locale')
 import os
-logging.debug(': Loaded os')
 import git
-logging.debug('imported git')
 from typing import Dict
-logging.debug(': loaded typing')
-#import git
 import config  # noqa: F401
 logging.debug( ': loaded config')
 logging.debug('now trying to load flask')
 import flask
 logging.debug('imported flask')
-#from flask import send_from_directory, render_template, request
-#logging.debug( ': loaded flask1')
-#from flask import Flask as myFlask
-#logging.debug(': loaded myFlask')
-#from flask import Response
 from flask_calendar.actions import (
     delete_task_action,
     do_login_action,
@@ -36,11 +25,8 @@ from flask_calendar.actions import (
     update_task_day_action,
     calendar_view_action,
 )
-logging.debug(': loaded flask_calendar.actions')
-from flask_calendar.app_utils import task_details_for_markup
-logging.debug(': loaded flask_calendar.app_utils')
 
-logging.debug('----------')
+from flask_calendar.app_utils import task_details_for_markup
 
 def create_app(config_overrides: Dict = None):
     logging.debug(": function create_app running...")
@@ -69,13 +55,13 @@ def create_app(config_overrides: Dict = None):
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             origin = repo.remotes.origin
             origin.pull()
-            return 'Updated PythonAnywhere successfully', 200
+            return 'Updated PythonAnywhere successfully by POST', 200
         if flask.request.method == 'GET':
             logging.debug("webhook method = GET")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             origin = repo.remotes.origin
             origin.pull()
-            return 'Updated PythonAnywhere successfully', 200
+            return 'Updated PythonAnywhere successfully with GET', 200
         else:
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
