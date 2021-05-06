@@ -67,7 +67,7 @@ def create_app(config_overrides: Dict = None):
             return 'Wrong event type', 400
 
     def index():
-        return 'Updated automatically! :-)', 200
+        return 'Updated automatically!!! :-)', 200
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
     @app.route("/favicon.ico")
     def favicon():
