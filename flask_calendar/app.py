@@ -64,7 +64,7 @@ def create_app(config_overrides: Dict = None):
             logging.debug("webhook method = POST")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             
-            x_hub_signature = flask.request.headers.get(‘X-Hub-Signature’)
+            x_hub_signature = flask.request.headers.get('X-Hub-Signature')
             w_secret = app.config["SECRET_TOKEN"]
             logging.debug("secret %s", w_secret)
             if not is_valid_signature(x_hub_signature, flask.request.data, w_secret):
