@@ -1,11 +1,39 @@
-[![CircleCI](https://circleci.com/gh/Kartones/flask-calendar/tree/master.svg?style=svg)](https://circleci.com/gh/Kartones/flask-calendar/tree/master)
+# Leipzig Tennis School (LTS) Schedule
+# A Pipeline Academy - Capstone Project 
 
-# flask-calendar
+## Situation
 
-## Introduction
+Head of tennis coaches needs to:
+* Schedule group/single lessons for all club members
+* Arrange schedule with availability of other coaches
+* Handle and distribute ad-hoc queries to coaches
 
-At December 2017, I decided I wanted to opt out from Google services as much as possible. One of the services that tied me most was Calendar. There are not many alternatives, and even fewer web-based. I decided to try using a Trello board with due dates and some labels for a while, but proved to be harder to maintain. Add the lack of a month calendar view, and no support for recurrent/repetitive tasks, and I decided to do good use of a holidays to spend some hours and build a simple GCalendar clone.
+## Problem
 
+Due to almost weekly changing COVID-19 regulations, 
+schedule has to be edited all the time. Not everybody can effort private
+lessons for example. That's why the whole schedule is recreated, 
+redistributed again and again. Overview about e.g. free time slots is totally lost. 
+
+## Solution
+
+1. Embed an interactive schedule on the tennis school's website to see:
+* weekly schedule of group lessons
+* which trainer is on which court
+* free time slots for booking ad-hoc training
+
+2. Offer functionality to request private training in open time slot for particular coach.
+Automatically forward the request to the coach, who can get in touch with customer.
+
+### Introduction
+
+I choose a nice [OS flask-calendar by Kartones](https://github.com/Kartones/flask-calendar) as blueprint and extended it for my purposes:
+* different views (month, week, day) and some layout adjustments
+* changed json file storage to underlying database (sqllite)
+* deployment-readiness for pythonanywhere
+* CD/CI with GitHub Actions (secure webhook)
+* (more), custom task fields
+* ETL pipelines (database(s), Google spreadsheets, e-mail notifications, reports)
 
 ### Details
 
@@ -27,8 +55,6 @@ It is mobile friendly (buttons for actions are ugly and cannot drag & drop days 
 Compatible with Firefox, Brave and Chrome. No plans for other browser support (but PRs are welcome).
 
 No Javascript libraries and no CSS frameworks used, so this means the corresponding code and styles are accordingly non-impressive.
-
-No databases, as I don't need to do any querying or complex stuff I couldn't also do with JSON files and basic dictionaries.
 
 Authentication works using werkzeug SimpleCache for storage, which means if the application runs with more than one thread you'll get into problems. Run it with a single process uwsgi or similar.
 
@@ -62,54 +88,13 @@ The project has been tested with Linux, but should work without problems on OSX 
 6. Refer to the `config.py` file for additional configuration, and check the ***Miscellaneous*** section below to see how to create users.
 
 
-### My uWSGI and nginx files
+### My uWSGI
 
-When I hosted an instance of the flask calendar, this were my configuration files, just in case they are of use as a guideline:
+I hosted an instance of the flask calendar in pythonanywhere, this were my configuration files, just in case they are of use as a guideline:
 
-`uwsgi.ini`:
+`pyany_uwsgi.py`:
 ```
-[uwsgi]
-
-chdir = /path/to/flask-calendar
-
-module = flask_calendar.uwsgi
-callable = app
-manage-script-name = true
-mount = /=%(module):%(callable)
-
-master = true
-processes = 1
-
-uid = www-data
-gid = www-data
-socket = /tmp/flask-calendar.sock
-chmod-socket = 660
-
-vacuum = true
-
-logto = /path/to/logs/flask-calendar.log
-
-die-on-term = true
-```
-
-nginx's `site-available` file:
-```
-server {
-    listen 80;
-    listen [::]:80;
-
-    root /path/to/flask-calendar;
-    index index.html;
-
-    server_name your.flask-calendar.hostname;
-
-    location / {
-        include uwsgi_params;
-        uwsgi_pass unix:/tmp/flask-calendar.sock;
-    }
-
-    # other stuff here, like ssl
-}
+TODO
 ```
 
 ## Data Migrations
@@ -157,11 +142,6 @@ make test
 ```bash
 make coverage
 ```
-
-### Contributing / Pull Requests
-
-Please ensure you've setup pre-commit (it's [installed](https://pre-commit.com/#installation), then run `pre-commit install` on the repository) so that flake8 and other linters run before pushing the code.
-This project uses [black](https://github.com/psf/black) and [isort](https://github.com/timothycrosley/isort) so it might auto-format your files and modify them. Just check them and add to the commit (should only be text formatting and import ordering related).
 
 ## Virtualenv Environment
 
