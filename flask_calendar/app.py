@@ -83,16 +83,8 @@ def create_app(config_overrides: Dict = None):
     app.add_url_rule("/", "index_action", index_action, methods=["GET"])
     app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
     app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
-    #TODO:
     app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
 
-
-    #@app.route("/<calendar_id>/<view>")
-    #def calendar_id(calendar_id=None):
-        #if key doesn't exist, returns None
-        #view = request.args.get("view", app.config["VIEW"])
-        #app.view_functions["main_calendar_action"] = main_calendar_action
-        #pass
     app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
     app.add_url_rule(
         "/<calendar_id>/<year>/<month>/new_task", "new_task_action", new_task_action, methods=["GET"],

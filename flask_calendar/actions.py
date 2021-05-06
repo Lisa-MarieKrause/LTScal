@@ -44,10 +44,12 @@ def index_action() -> Response:
 
 
 def login_action() -> Response:
+    logging.debug("starting login_action ...")
     return cast(Response, render_template("login.html"))
 
 
 def do_login_action() -> Response:
+    logging.debug("starting do_login_action ...")
     username = request.form.get("username", "")
     password = request.form.get("password", "")
     authentication = get_authentication()
@@ -98,6 +100,7 @@ def main_calendar_action(calendar_id: str) -> Response:
     try:
         data = calendar_data.load_calendar(calendar_id)
     except FileNotFoundError:
+        logging.debug("failed in main_calendar_action")
         abort(404)
 
     tasks = calendar_data.tasks_from_calendar(year, month, data)
@@ -136,6 +139,7 @@ def main_calendar_action(calendar_id: str) -> Response:
 @authenticated
 @authorized
 def calendar_view_action(calendar_id: str, view: str) -> Response:
+    logging.debug("starting calendar_view_action ...")
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
 
     current_day, current_month, current_year = GregorianCalendar.current_date()
@@ -154,6 +158,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
     try:
         data = calendar_data.load_calendar(calendar_id)
     except FileNotFoundError:
+        logging.debug("failed here")
         abort(404)
 
     tasks = calendar_data.tasks_from_calendar(year, month, data)

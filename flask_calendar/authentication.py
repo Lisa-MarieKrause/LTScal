@@ -9,13 +9,14 @@ from cachelib.simple import SimpleCache
 
 cache = SimpleCache()
 
-logging.debug('path: %s', os.path)
+
 
 class Authentication:
 
     USERS_FILENAME = "users.json"
 
     def __init__(self, data_folder: str, password_salt: str, failed_login_delay_base: int) -> None:
+        logging.debug('init Authentication')
         self.contents = {}  # type: Dict
         user_path = os.path.join(".", data_folder, self.USERS_FILENAME)
         logging.debug("\n")
