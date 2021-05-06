@@ -70,6 +70,12 @@ def create_app(config_overrides: Dict = None):
             origin = repo.remotes.origin
             origin.pull()
             return 'Updated PythonAnywhere successfully', 200
+        if flask.request.method == 'GET':
+            logging.debug("webhook method = GET")
+            repo = git.Repo('/home/Lii544/Projects/LTScal')
+            origin = repo.remotes.origin
+            origin.pull()
+            return 'Updated PythonAnywhere successfully', 200
         else:
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
@@ -80,7 +86,7 @@ def create_app(config_overrides: Dict = None):
         return flask.send_from_directory(
             os.path.join(app.root_path, "static"), "favicon.ico", mimetype="image/vnd.microsoft.icon",
         )
-    app.add_url_rule("/server/update", "webhook", webhook, methods=["POST"])
+    app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
     #app.add_url_rule("/", "index_action", index_action, methods=["GET"])
     #app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
     #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
