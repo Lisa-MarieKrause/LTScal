@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(filename='/home/Lii544/Projects/LTScal/pythonanywhere.log',level=logging.DEBUG)
+logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
 import re
 from datetime import date, timedelta
 from typing import List, Optional, Tuple, cast  # noqa: F401

@@ -1,4 +1,3 @@
-import logging
 import hashlib
 import json
 import os
@@ -16,11 +15,8 @@ class Authentication:
     USERS_FILENAME = "users.json"
 
     def __init__(self, data_folder: str, password_salt: str, failed_login_delay_base: int) -> None:
-        logging.debug('init Authentication')
         self.contents = {}  # type: Dict
         user_path = os.path.join(".", data_folder, self.USERS_FILENAME)
-        logging.debug("\n")
-        logging.debug('path: %s', user_path)
         with open(os.path.join(".", data_folder, self.USERS_FILENAME)) as file:
             self.contents = json.load(file)
         self.password_salt = password_salt

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import logging
-logging.basicConfig(filename='/home/Lii544/Projects/LTScal/pythonanywhere.log',level=logging.DEBUG)
+logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
 logging.debug(' Loaded logging module')
 from datetime import datetime
 import locale

@@ -3,7 +3,7 @@ import uuid
 from functools import wraps
 from typing import Any, Callable
 import logging
-logging.basicConfig(filename='/home/Lii544/Projects/LTScal/pythonanywhere.log',level=logging.DEBUG)
+logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
 logging.debug(' Loaded logging module in app_utils')
 from cachelib.simple import SimpleCache
 from flask import abort, current_app, redirect, request
