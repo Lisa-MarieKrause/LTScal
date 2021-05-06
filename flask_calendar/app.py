@@ -79,7 +79,7 @@ def create_app(config_overrides: Dict = None):
             return 'Wrong event type', 400
 
     def index():
-        return 'Updated automatically!!! :-)', 200
+        return flask.redirect("/sample/")
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
     @app.route("/favicon.ico")
     def favicon():
@@ -93,7 +93,7 @@ def create_app(config_overrides: Dict = None):
     #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
     #app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
 
-    #app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
+    app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
     app.add_url_rule(
         "/<calendar_id>/<year>/<month>/new_task", "new_task_action", new_task_action, methods=["GET"],
     )
