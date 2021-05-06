@@ -1,0 +1,369 @@
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 10:47:02 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7ffdf56053d0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask_calendar.uwsgi:app on /
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 83020)
+spawned uWSGI worker 1 (pid: 83021, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 11:09:11 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7f9cb30049f0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask_calendar.uwsgi:app on /
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 83915)
+spawned uWSGI worker 1 (pid: 83916, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 11:15:05 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7fe81440b050
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask_calendar.uwsgi:flask_calendar.app on /
+Traceback (most recent call last):
+  File "./flask_calendar/uwsgi.py", line 1, in <module>
+    from flask_calendar import app as flask_app
+  File "./flask_calendar/app.py", line 8, in <module>
+    from flask import Flask, Response, send_from_directory
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/flask/__init__.py", line 14, in <module>
+    from jinja2 import escape
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/__init__.py", line 9, in <module>
+    from .bccache import BytecodeCache
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/site-packages/jinja2/bccache.py", line 14, in <module>
+    import tempfile
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/tempfile.py", line 45, in <module>
+    from random import Random as _Random
+  File "/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/random.py", line 41, in <module>
+    from math import log as _log, exp as _exp, pi as _pi, e as _e, ceil as _ceil
+ImportError: dlopen(/Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so, 2): Symbol not found: _PyExc_MemoryError
+  Referenced from: /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+  Expected in: flat namespace
+ in /Users/lisa-mariekrause/opt/anaconda3/lib/python3.8/lib-dynload/math.cpython-38-darwin.so
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 84145)
+spawned uWSGI worker 1 (pid: 84146, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 13:26:55 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7f8b4ec09ab0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='') (callable not found or import error)
+failed to open python file flask-calendar/flask_calendar/uwsgi.py
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask-calendar.flask_calendar.uwsgi:app on /
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 88630)
+spawned uWSGI worker 1 (pid: 88633, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 14:12:11 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7fbfe5508c00
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask-calendar.flask_calendar.uwsgi:application on /
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 90535)
+spawned uWSGI worker 1 (pid: 90536, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 14:13:52 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.2.0 Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/opt/anaconda3/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 2560
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7ff16d4084b0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask-calendar.flask_calendar.uwsgi:app on /
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 90622)
+spawned uWSGI worker 1 (pid: 90623, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Fri Apr 30 16:42:53 2021] ***
+compiled with version: Apple LLVM 12.0.0 (clang-1200.0.32.29) on 30 April 2021 08:36:11
+os: Darwin-20.4.0 Darwin Kernel Version 20.4.0: Fri Mar  5 01:14:14 PST 2021; root:xnu-7195.101.1~3/RELEASE_X86_64
+nodename: Lisa-Maries-MacBook-Pro.local
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 4
+current working directory: /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+detected binary path: /Users/lisa-mariekrause/flask-calendar/bin/uwsgi
+chdir() to /Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/flask-calendar
+your processes number limit is 1392
+your memory page size is 4096 bytes
+detected max file descriptor number: 256
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/flask-calendar.sock fd 3
+Python version: 3.8.3 (default, Jul  2 2020, 11:26:31)  [Clang 10.0.0 ]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x7fcb91c0c700
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 145792 bytes (142 KB) for 1 cores
+*** Operational MODE: single process ***
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='') (callable not found or import error)
+mounting flask-calendar.flask_calendar.uwsgi:app on /
+ModuleNotFoundError: No module named 'flask-calendar'
+unable to load app 0 (mountpoint='/') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 10744)
+spawned uWSGI worker 1 (pid: 10745, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/flask-calendar.sock removed.
