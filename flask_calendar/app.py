@@ -66,6 +66,8 @@ def create_app(config_overrides: Dict = None):
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
 
+    def index():
+        return 'Updated automatically', 200
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
     @app.route("/favicon.ico")
     def favicon():
@@ -73,6 +75,7 @@ def create_app(config_overrides: Dict = None):
             os.path.join(app.root_path, "static"), "favicon.ico", mimetype="image/vnd.microsoft.icon",
         )
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
+    app.add_url_rule("/", "index", index, method=["GET"])
     #app.add_url_rule("/", "index_action", index_action, methods=["GET"])
     #app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
     #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
