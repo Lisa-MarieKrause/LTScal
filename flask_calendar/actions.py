@@ -78,8 +78,8 @@ def do_login_action() -> Response:
     else:
         return redirect("/login")
 
-@authenticated
-@authorized
+#@authenticated
+#@authorized
 def main_calendar_action(calendar_id: str) -> Response:
     logging.debug("starting main_calendar_action: %s", calendar_id)
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
