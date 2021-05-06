@@ -63,7 +63,7 @@ def create_app(config_overrides: Dict = None):
     # route configuration for receiving information from GitHub
     @app.route('/update_server', methods=['POST'])
     def webhook():
-        if request.method == 'POST':
+        if flask.request.method == 'POST':
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             origin = repo.remotes.origin
             origin.pull()
