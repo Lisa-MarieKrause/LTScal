@@ -4,7 +4,9 @@ logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',l
 from datetime import datetime
 import locale
 import os
-import git
+import git # CD/CI with GitHub
+import hmac # Securing the webhook
+import hashlib # Securing the webhook
 from typing import Dict
 import config  # noqa: F401
 logging.debug( ': loaded config')
@@ -47,21 +49,29 @@ def create_app(config_overrides: Dict = None):
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
     # route configuration for receiving information from GitHub
-    #@app.route('/update_server', methods=['POST'])
+    def is_valid_signature(x_hub_signature, data, private_key):
+    # x_hub_signature and data are from the webhook payload
+    # private key is your webhook secret
+    hash_algorithm, github_signature = x_hub_signature.split('=', 1)
+    algorithm = hashlib.__dict__.get(hash_algorithm)
+    encoded_key = bytes(private_key, 'latin-1')
+    mac = hmac.new(encoded_key, msg=data, digestmod=algorithm)
+    return hmac.compare_digest(mac.hexdigest(), github_signature)
+    
     def webhook():
         logging.debug("starting webhook()")
         if flask.request.method == 'POST':
             logging.debug("webhook method = POST")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
-            origin = repo.remotes.origin
-            origin.pull()
-            return 'Updated PythonAnywhere successfully by POST', 200
-        if flask.request.method == 'GET':
-            logging.debug("webhook method = GET")
-            repo = git.Repo('/home/Lii544/Projects/LTScal')
-            origin = repo.remotes.origin
-            origin.pull()
-            return 'Updated PythonAnywhere successfully with GET', 200
+            
+            x_hub_signature = flask.request.headers.get(‘X-Hub-Signature’)
+            w_secret = app.config["SECRET_TOKEN"]
+            if not is_valid_signature(x_hub_signature, flask.request.data, w_secret):
+                return 'Deploy signature failed:{sig}'.format(sig=x_hub_signature), 400
+            else:
+                origin = repo.remotes.origin
+                origin.pull()
+                return 'Updated PythonAnywhere successfully by POST', 200
         else:
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400

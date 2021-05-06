@@ -1,5 +1,7 @@
 import flask_calendar.constants as constants
+import os
 
+SECRET_TOKEN = os.getenv("SECRET_TOKEN")
 DEBUG = True
 DATA_FOLDER = "data"
 USERS_DATA_FOLDER = "users"
