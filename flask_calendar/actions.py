@@ -1,3 +1,5 @@
+import logging
+logging.basicConfig(filename='/home/Lii544/Projects/LTScal/pythonanywhere.log',level=logging.DEBUG)
 import re
 from datetime import date, timedelta
 from typing import List, Optional, Tuple, cast  # noqa: F401
@@ -21,6 +23,7 @@ from flask_calendar.gregorian_calendar import GregorianCalendar
 
 
 def get_authentication() -> Authentication:
+    logging.debug("starting get_authentication ...")
     auth = getattr(g, "_auth", None)
     if auth is None:
         auth = g._auth = Authentication(
@@ -33,6 +36,7 @@ def get_authentication() -> Authentication:
 
 @authenticated
 def index_action() -> Response:
+    logging.debug("starting index_action ...")
     username = get_session_username(session_id=str(request.cookies.get(constants.SESSION_ID)))
     authentication = get_authentication()
     user_data = authentication.user_data(username)
@@ -75,6 +79,7 @@ def do_login_action() -> Response:
 @authenticated
 @authorized
 def main_calendar_action(calendar_id: str) -> Response:
+    logging.debug("starting main_calendar_action: %s", calendar_id)
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
 
     current_day, current_month, current_year = GregorianCalendar.current_date()

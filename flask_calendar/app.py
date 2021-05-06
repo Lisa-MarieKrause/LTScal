@@ -64,11 +64,13 @@ def create_app(config_overrides: Dict = None):
     @app.route('/update_server', methods=['POST'])
     def webhook():
         if flask.request.method == 'POST':
+            logging.debug("webhook method = POST")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             origin = repo.remotes.origin
             origin.pull()
             return 'Updated PythonAnywhere successfully', 200
         else:
+            logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
 
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
