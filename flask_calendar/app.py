@@ -60,19 +60,20 @@ def create_app(config_overrides: Dict = None):
     
     def webhook():
         logging.debug("starting webhook()")
-        if flask.request.method == 'POST':
+        abort_code = 418
+        if flask.request.method in ['POST', 'GET']:
             logging.debug("webhook method = POST")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
             
             x_hub_signature = flask.request.headers.get('X-Hub-Signature')
-            w_secret = app.config["SECRET_TOKEN"]
-            logging.debug("secret %s", w_secret)
+            w_secret = os.environ['SECRET_TOKEN']
             if not is_valid_signature(x_hub_signature, flask.request.data, w_secret):
-                return 'Deploy signature failed:{sig}'.format(sig=x_hub_signature), 400
-            else:
-                origin = repo.remotes.origin
-                origin.pull()
-                return 'Updated PythonAnywhere successfully by POST', 200
+                print('Deploy signature failed:{sig}'.format(sig=x_hub_signature))
+                flask.abort(abort_code)
+            
+            origin = repo.remotes.origin
+            origin.pull()
+            return 'Updated PythonAnywhere successfully by POST', 200
         else:
             logging.debug("webhook method <> POST")
             return 'Wrong event type', 400
