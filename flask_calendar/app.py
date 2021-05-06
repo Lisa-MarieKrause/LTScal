@@ -75,7 +75,7 @@ def create_app(config_overrides: Dict = None):
             os.path.join(app.root_path, "static"), "favicon.ico", mimetype="image/vnd.microsoft.icon",
         )
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
-    app.add_url_rule("/", "index", index, method=["GET"])
+    app.add_url_rule("/", "index", index, methods=["GET"])
     #app.add_url_rule("/", "index_action", index_action, methods=["GET"])
     #app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
     #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
