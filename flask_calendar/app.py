@@ -63,6 +63,7 @@ def create_app(config_overrides: Dict = None):
     # route configuration for receiving information from GitHub
     #@app.route('/update_server', methods=['POST'])
     def webhook():
+        logging.debug("starting webhook()")
         if flask.request.method == 'POST':
             logging.debug("webhook method = POST")
             repo = git.Repo('/home/Lii544/Projects/LTScal')
@@ -80,12 +81,12 @@ def create_app(config_overrides: Dict = None):
             os.path.join(app.root_path, "static"), "favicon.ico", mimetype="image/vnd.microsoft.icon",
         )
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST"])
-    app.add_url_rule("/", "index_action", index_action, methods=["GET"])
-    app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
-    app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
-    app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
+    #app.add_url_rule("/", "index_action", index_action, methods=["GET"])
+    #app.add_url_rule("/login", "login_action", login_action, methods=["GET"])
+    #app.add_url_rule("/do_login", "do_login_action", do_login_action, methods=["POST"])
+    #app.add_url_rule("/<calendar_id>/<view>", "calendar_view_action", calendar_view_action, methods=["GET"])
 
-    app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
+    #app.add_url_rule("/<calendar_id>/", "main_calendar_action", main_calendar_action, methods=["GET"])
     app.add_url_rule(
         "/<calendar_id>/<year>/<month>/new_task", "new_task_action", new_task_action, methods=["GET"],
     )
