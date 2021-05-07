@@ -4,6 +4,7 @@
     {% endfor %}
 </ul>
 
+<ul class="calendar" id="calendar">
 {% for day in month_days %}
             <li
                 {% if day.month != month %}
@@ -76,4 +77,4 @@
                 </ul>
             </li>
       {% endfor %}
-
+</ul>
