@@ -179,10 +179,6 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days.insert(0,"")
     else:
         days=GregorianCalendar.month_days(year, month)
-     
-    hours = [strftime]
-    for i in range(current_app.config["WORKING_HOURS"]*2+1):
-        
         
     return cast(
         Response,
