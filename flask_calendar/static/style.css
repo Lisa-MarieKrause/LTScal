@@ -394,7 +394,7 @@ ul.tasks li a {
 
 
 
-.weekview {
+.day-week {
     display: grid;
     place-content: center;
     text-align: center;

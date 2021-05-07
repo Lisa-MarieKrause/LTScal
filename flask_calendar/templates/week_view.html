@@ -14,9 +14,9 @@
 {% for day in week_days %}
 <li
     {% if day.month != month %}
-        class="day weekview othermonth"
+        class="day-week othermonth"
     {% else %}
-        class="day weekview"
+        class="day-week"
     {% endif %}
     data-year="{{ day.year }}"
     data-month="{{ day.month }}"
