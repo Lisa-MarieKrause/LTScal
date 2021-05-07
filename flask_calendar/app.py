@@ -135,10 +135,6 @@ def create_app(config_overrides: Dict = None):
     # setting jinja filters for in-html-usage
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
     
-    @app.context_processor
-    def utility_processor():
-        return dict(business_hours=business_hours)
-    
     return app
 
 logging.debug('creating app')
