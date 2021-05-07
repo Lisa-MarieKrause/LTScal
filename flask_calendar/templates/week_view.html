@@ -10,7 +10,7 @@
       {% endfor %}
   </div>
   
-  <div class="content" style={{"repeat(" + hours|length|string +", 3em)" }}>
+  <div class="content" style={{"grid-template-rows: repeat(" + hours|length|string +", 3em)" }}>
       {% for hour in hours %}
         <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
       {% endfor %}
