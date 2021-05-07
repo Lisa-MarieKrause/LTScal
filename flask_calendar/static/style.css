@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box
+}
+
 body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
     font-size: 1em/1.4;
@@ -178,7 +182,7 @@ button.btn {
 }
 
 .weekday-header {
-  background-color: #F6F6F6;
+  /* background-color: #F6F6F6;
   color: #666;
   padding: 3px;
   margin: 0;
@@ -191,8 +195,8 @@ button.btn {
   font-size: 12px;
   border-top: #DADCE0 1px solid;
   border-right: #DADCE0 1px solid;
-  border-bottom: 0px;
-  /* border-left: 1px solid #dadce0; */
+  border-bottom: 0px; */
+  border-left: 1px solid #dadce0;
 }
 
 .calendar {
@@ -352,7 +356,7 @@ ul.tasks li a {
 /* ---------------------*/
 
 .monthcalendar {
- padding: 0;
+  padding: 0;
   margin: 0;
   display: flex;
   flex-flow: row wrap;
