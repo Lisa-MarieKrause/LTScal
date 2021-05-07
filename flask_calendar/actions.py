@@ -175,8 +175,8 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         weekdays_headers.insert(0, "")
         weekdays_headers.insert(0, "")
         days=GregorianCalendar.week_dates(year, month, current_day)
-        days.insert(0;"")
-        days.insert(0;"")
+        days.insert(0,"")
+        days.insert(0,"")
     else:
         days=GregorianCalendar.month_days(year, month)
         
