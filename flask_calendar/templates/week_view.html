@@ -16,13 +16,9 @@
       {% endfor %}
 
         <div class="filler-col"></div>
-        <div class="col" style="grid-column:3"></div>
-        <div class="col" style="grid-column:4"></div>
-        <div class="col" style="grid-column:5"></div>
-        <div class="col" style="grid-column:6"></div>
-        <div class="col" style="grid-column:7"></div>
-        <div class="col" style="grid-column:8"></div>
-        <div class="col" style="grid-column:9"></div>
+        {% for i in range(7) %}
+        <div class="col" style="grid-column:{{i+2}}"></div>
+        {% endfor %}
         <div class="row" style="grid-row:1"></div>
         <div class="row" style="grid-row:2"></div>
         <div class="row" style="grid-row:3"></div>
