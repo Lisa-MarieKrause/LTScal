@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 import logging
-logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
+import platform
+if platform.system() == 'Linux':
+    logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
+else:
+        logging.basicConfig(filename='/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal-pythonanywhere.log',level=logging.DEBUG)
+    
 from datetime import datetime
 import locale
 import os
