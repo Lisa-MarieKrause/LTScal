@@ -16,6 +16,7 @@ from flask_calendar.app_utils import (
     new_session_id,
     next_month_link,
     previous_month_link,
+    business_hours,
 )
 from flask_calendar.authentication import Authentication
 from flask_calendar.calendar_data import CalendarData
@@ -113,6 +114,7 @@ def main_calendar_action(calendar_id: str) -> Response:
         weekdays_headers = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
     else:
         weekdays_headers = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+        
 
     return cast(
         Response,
@@ -202,6 +204,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             day_start = current_app.config["DAY_START"],
             day_end = current_app.config["DAY_END"],
             interval = current_app.config["INTERVAL"],
+            hours = business_hours(day_start, day_end, interval),
         ),
     )
 
