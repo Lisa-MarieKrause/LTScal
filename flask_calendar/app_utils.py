@@ -100,7 +100,7 @@ def business_hours(day_start: str, day_end: str, mins: int):
     business_hours = [datetime.strftime(hour, '%H:%M')]
     for i in range(int(interval)):
         hour += timedelta(minutes = mins)
-        business_hours += datetime.strftime(hour, '%H:%M')
+        business_hours.append((datetime.strftime(hour, '%H:%M')))
     return business_hours
 
     decorated_fragments = []
