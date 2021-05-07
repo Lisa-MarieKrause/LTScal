@@ -174,7 +174,12 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
     if view == "week":
         weekdays_headers.insert(0, "")
         weekdays_headers.insert(0, "")
-
+        days=GregorianCalendar.week_dates(year, month, current_day)
+        days.insert(0;"")
+        days.insert(0;"")
+    else:
+        days=GregorianCalendar.month_days(year, month)
+        
     return cast(
         Response,
         render_template(
@@ -186,8 +191,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             current_year=current_year,
             current_month=current_month,
             current_day=current_day,
-            month_days=GregorianCalendar.month_days(year, month),
-            week_days=GregorianCalendar.week_dates(year, month, current_day),
+            days=days,
             previous_month_link=previous_month_link(year, month),
             next_month_link=next_month_link(year, month),
             base_url=current_app.config["BASE_URL"],

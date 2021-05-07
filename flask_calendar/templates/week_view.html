@@ -1,14 +1,22 @@
 <div class="weekcalendar" id="weekcalendar">
 
   <div class="calendar-header-week">
-    {% for weekday_header in weekdays_headers %}
+    <!-- {% for weekday_header in weekdays_headers %}
         {% if weekday_header == "" %}
             <li class="filler"></li>
         {% else %}
             <li class="weekday-header">{{ weekday_header }}</li>
         {% endif %}
     {% endfor %}
-    
+    -->
+    {% for day in days %}
+        {% if day == "" %}
+            <li class="filler"></li>
+        {% else %}
+            <li class="weekday-header">{{ day }}</li>
+        {% endif %}
+    {% endfor %}
+    <!--
     {% for day in week_days %}
     <li
       {% if day.month != month %}
@@ -26,6 +34,7 @@
           <span class="daynumber">
       {% endif %}
       {{ day.day }}</span>
+    -->
   </div>
   
   <div class="content">
