@@ -395,7 +395,7 @@ ul.tasks li a {
   grid-template-rows: repeat(24, 3em);
 }
 
-.time {
+.weektime {
   grid-column: 1;
   text-align: right;
   align-self: end;
