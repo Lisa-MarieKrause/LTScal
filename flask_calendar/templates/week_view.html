@@ -11,29 +11,35 @@
   </div>
   
   <div class="content">
-        <div class="weektime" style="grid-row:1">01:00</div>
-        <div class="weektime" style="grid-row:2">02:00</div>
-        <div class="weektime" style="grid-row:3">03:00</div>
-        <div class="weektime" style="grid-row:4">04:00</div>
-        <div class="weektime" style="grid-row:5">05:00</div>
-        <div class="weektime" style="grid-row:6">06:00</div>
-        <div class="weektime" style="grid-row:7">07:00</div>
-        <div class="weektime" style="grid-row:8">08:00</div>
-        <div class="weektime" style="grid-row:9">09:00</div>
-        <div class="weektime" style="grid-row:10">10:00</div>
-        <div class="weektime" style="grid-row:11">11:00</div>
-        <div class="weektime" style="grid-row:12">12:00</div>
-        <div class="weektime" style="grid-row:13">13:00</div>
-        <div class="weektime" style="grid-row:14">14:00</div>
+        <div class="weektime" style="grid-row:1">08:00</div>
+        <div class="weektime" style="grid-row:2">08:30</div>
+        <div class="weektime" style="grid-row:3">09:00</div>
+        <div class="weektime" style="grid-row:4">09:30</div>
+        <div class="weektime" style="grid-row:5">10:00</div>
+        <div class="weektime" style="grid-row:6">10:30</div>
+        <div class="weektime" style="grid-row:7">11:00</div>
+        <div class="weektime" style="grid-row:8">11:30</div>
+        <div class="weektime" style="grid-row:9">12:00</div>
+        <div class="weektime" style="grid-row:10">12:30</div>
+        <div class="weektime" style="grid-row:11">13:00</div>
+        <div class="weektime" style="grid-row:12">13:30</div>
+        <div class="weektime" style="grid-row:13">14:00</div>
+        <div class="weektime" style="grid-row:14">14:30</div>
         <div class="weektime" style="grid-row:15">15:00</div>
-        <div class="weektime" style="grid-row:16">16:00</div>
-        <div class="weektime" style="grid-row:17">17:00</div>
-        <div class="weektime" style="grid-row:18">18:00</div>
-        <div class="weektime" style="grid-row:19">19:00</div>
-        <div class="weektime" style="grid-row:20">20:00</div>
-        <div class="weektime" style="grid-row:21">21:00</div>
+        <div class="weektime" style="grid-row:16">15:30</div>
+        <div class="weektime" style="grid-row:17">16:00</div>
+        <div class="weektime" style="grid-row:18">16:30</div>
+        <div class="weektime" style="grid-row:19">17:00</div>
+        <div class="weektime" style="grid-row:20">17:30</div>
+        <div class="weektime" style="grid-row:21">18:00</div>
+        <div class="weektime" style="grid-row:22">18:30</div>
+        <div class="weektime" style="grid-row:23">19:00</div>
+        <div class="weektime" style="grid-row:20">19:30</div>
+        <div class="weektime" style="grid-row:21">20:00</div>
+        <div class="weektime" style="grid-row:22">20:30</div>
+        <div class="weektime" style="grid-row:23">21:00</div>
+        <div class="weektime" style="grid-row:21">21:30</div>
         <div class="weektime" style="grid-row:22">22:00</div>
-        <div class="weektime" style="grid-row:23">23:00</div>
         <div class="filler-col"></div>
         <div class="col" style="grid-column:3"></div>
         <div class="col" style="grid-column:4"></div>
@@ -65,5 +71,77 @@
         <div class="row" style="grid-row:21"></div>
         <div class="row" style="grid-row:22"></div>
         <div class="row" style="grid-row:23"></div>
+        {% for day in days %}
+        <li
+            {% if day.month != month %}
+                class="day-week othermonth"
+            {% else %}
+                class="day-week"
+            {% endif %}
+            data-year="{{ day.year }}"
+            data-month="{{ day.month }}"
+            data-day="{{ day.day }}">
+
+            {% if day.day == current_day and day.month == current_month and day.year == current_year %}
+                    <span class="daynumber-current">
+            {% else %}
+                    <span class="daynumber">
+            {% endif %}
+            {{ day.day }}</span>
+            <ul class="tasks">
+                {% if day.month|string in tasks and day.day|string in tasks[day.month|string] %}
+                    {% for task in tasks[day.month|string][day.day|string]|sort(attribute="start_time") %}
+                        <li
+                            {% if day.month != month %}
+                                class="task greyed"
+                            {% else %}
+                                class="task"
+                                style="background-color:{{ task["color"] }}"
+                            {% endif %}
+                            data-year="{{ day.year }}"
+                            data-month="{{ day.month }}"
+                            data-day="{{ day.day }}"
+                            data-id="{{ task["id"] }}"
+                            {% if "repetition_type" in task %}data-recurrent="1"{% endif %}>
+
+                            {% if not task["is_all_day"] %}
+                                <span class="time">{{ task["start_time"] }}{% if task["start_time"] != task["end_time"] %} - {{ task["end_time"] }}{% endif %}</span>
+                            {% endif %}
+                            {{ task["title"] }}
+                            <p class="accordion-hidden">
+                                {{ task["details"]|task_details_for_markup|safe }}
+                                {% if day.month == month %}
+                                    <a href="#"
+                                        data-id="{{ task["id"] }}"
+                                        data-year="{{ day.year }}"
+                                        data-month="{{ day.month }}"
+                                        data-day="{{ day.day }}"
+                                        data-title="{{ task["title"]|replace("\"","") }}"
+                                        class="button smaller remove-task"
+                                        title="Remove task">x</a>
+                                    {% if "repetition_type" in task %}
+                                        <a href="#"
+                                            data-id="{{ task["id"] }}"
+                                            data-year="{{ day.year }}"
+                                            data-month="{{ day.month }}"
+                                            data-day="{{ day.day }}"
+                                            data-title="{{ task["title"]|replace("\"","") }}"
+                                            class="button smaller hide-recurrent-task"
+                                            title="Hide this task ocurrence">H</a>
+                                    {% endif %}
+                                        <a href="/{{ calendar_id }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if "repetition_type" in task %}?repeats=1{% endif %}"
+                                            class="button smaller edit-task"
+                                            title="Edit task">E</a>
+                                {% endif %}
+                                {% if "repetition_type" in task %}
+                                    <span class="button smaller recurrent-task" title="Recurent task">R</span>
+                                {% endif %}
+                            </p>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </li>
+        {% endfor %}
     </div>
 </div>
