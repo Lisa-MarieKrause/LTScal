@@ -150,6 +150,10 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
     month = int(request.args.get("m", current_month))
     month = max(min(month, 12), 1)
     month_name = GregorianCalendar.MONTH_NAMES[month - 1]
+    day_start = current_app.config["DAY_START"]
+    day_end = current_app.config["DAY_END"]
+    interval = current_app.config["INTERVAL"]
+    hours = business_hours(day_start, day_end, interval)
 
     if current_app.config["HIDE_PAST_TASKS"]:
         view_past_tasks = False
@@ -181,7 +185,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days.insert(0,"")
     else:
         days=GregorianCalendar.month_days(year, month)
-        
+    
     return cast(
         Response,
         render_template(
@@ -201,10 +205,10 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             display_view_past_button=current_app.config["SHOW_VIEW_PAST_BUTTON"],
             weekdays_headers=weekdays_headers,
             view = view,
-            day_start = current_app.config["DAY_START"],
-            day_end = current_app.config["DAY_END"],
-            interval = current_app.config["INTERVAL"],
-            hours = business_hours(day_start, day_end, interval),
+            day_start = day_start,
+            day_end = day_end,
+            interval = interval,
+            hours = hours,
         ),
     )
 
