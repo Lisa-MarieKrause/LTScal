@@ -10,11 +10,11 @@
     {% endfor %}
     -->
     {% for day in days %}
-        {% if day == "" %}
-            <div class="filler"></div>
-        {% else %}
-            <div class="day-week">{{ day }}</div>
-        {% endif %}
+    {% if day == "" %}
+        <div class="filler"></div>
+    {% else %}
+        <div class="day-week">{{ day }}</div>
+    {% endif %}
     {% endfor %}
     <!--
     {% for day in week_days %}
