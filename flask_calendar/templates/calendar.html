@@ -38,13 +38,13 @@
         {% endif %}
     </div>
 
-    <ul class="calendar-header">
-        {% for weekday_header in weekdays_headers %}
-            <li class="weekday-header">{{ weekday_header }}</li>
-        {% endfor %}
-    </ul>
-
     <ul class="calendar" id="calendar">
+        <ul class="calendar-header">
+            {% for weekday_header in weekdays_headers %}
+                <li class="weekday-header">{{ weekday_header }}</li>
+            {% endfor %}
+        </ul>
+        
         {% if view == "week" %}
           {% include "week_view.html" %}
         {% endif %}

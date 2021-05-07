@@ -344,3 +344,55 @@ ul.tasks li a {
         min-height: 8px;
     }
 }
+
+/* --------------------*/
+/* week view specifics */
+/* --------------------*/
+
+.container {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 3em 3em auto;
+  position: absolute;
+}
+
+.weekview {
+    display: grid;
+    place-content: center;
+    text-align: center;
+    grid-template-columns: 3em 10px repeat(7, 1fr);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 3em 10px repeat(7, 1fr);
+  grid-template-rows: repeat(24, 3em);
+}
+
+.time {
+  grid-column: 1;
+  text-align: right;
+  align-self: end;
+  font-size: 80%;
+  position: relative;
+  bottom: -1ex;
+  color: #70757a;
+  padding-right: 2px;
+}
+
+.col {
+  border-right: 1px solid #dadce0;
+  grid-row: 1/span 24;
+  grid-column: span 1;
+}
+
+.filler-col {
+  grid-row: 1/-1;
+  grid-column: 2;
+  border-right: 1px solid #dadce0;
+}
+
+.row {
+  grid-column: 2/-1;
+  border-bottom: 1px solid #dadce0;
+}

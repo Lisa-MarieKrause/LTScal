@@ -168,9 +168,12 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         calendar_data.hide_past_tasks(year, month, tasks)
 
     if current_app.config["WEEK_STARTING_DAY"] == constants.WEEK_START_DAY_MONDAY:
-        weekdays_headers = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+        weekdays_headers = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"]
     else:
-        weekdays_headers = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+        weekdays_headers = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"]
+    if view == "week":
+        weekdays_headers.insert(0, "")
+        weekdays_headers.insert(0, "")
 
     return cast(
         Response,
