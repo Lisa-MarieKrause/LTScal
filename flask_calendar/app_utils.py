@@ -95,7 +95,7 @@ def business_hours(day_start: str, day_end: str, mins: int):
     '''
     hour = datetime.strptime(day_start, '%H:%M')
     day_end = datetime.strptime(day_end, '%H:%M')
-    interval = (day_end - day_start).seconds / 60 # total count of minutes
+    interval = (day_end - hour).seconds / 60 # total count of minutes
     interval = interval/mins # gives the length of the array
     business_hours = [datetime.strftime(hour, '%H:%M')]
     for i in range(int(interval)):
