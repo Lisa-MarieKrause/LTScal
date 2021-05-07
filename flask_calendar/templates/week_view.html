@@ -10,7 +10,7 @@
       {% endfor %}
   </div>
   
-  <div class="content" style={{ "grid-template-rows: "+ hours|length }}>
+  <div class="content" style={{ "grid-template-rows: "+ hours|length|string }}>
       {% for hour in hours %}
         <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
       {% endfor %}
