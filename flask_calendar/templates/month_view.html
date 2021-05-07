@@ -1,10 +1,9 @@
-<ul class="monthcalendar" id="monthcalendar">
-
 <ul class="calendar-header">
     {% for weekday_header in weekdays_headers %}
         <li class="weekday-header">{{ weekday_header }}</li>
     {% endfor %}
 </ul>
+
 {% for day in month_days %}
             <li
                 {% if day.month != month %}
@@ -77,4 +76,4 @@
                 </ul>
             </li>
       {% endfor %}
-    </ul>
+
