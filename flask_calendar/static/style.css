@@ -422,3 +422,11 @@ ul.tasks li a {
   grid-column: 2/-1;
   border-bottom: 1px solid #dadce0;
 }
+
+.training {
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: 10px;
+  font-weight: bold;
+  font-size: 80%;
+}
