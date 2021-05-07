@@ -1,6 +1,16 @@
+<div class="container">
+    
+<ul class="calendar-header">
+    {% for weekday_header in weekdays_headers %}
+        {% if weekday_header == "" %}
+            <li class="filler"></li>
+        {% else %}
+            <li class="weekday-header">{{ weekday_header }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
 
 {% for day in week_days %}
-<div class="container">
 <li
     {% if day.month != month %}
         class="day weekview othermonth"

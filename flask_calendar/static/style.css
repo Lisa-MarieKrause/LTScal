@@ -157,7 +157,7 @@ button.btn {
 }
 
 .calendar-header {
-  padding: 0;
+  /* padding: 0;
   margin-top: 5px;
   margin-bottom: 0;
   display: flex;
@@ -165,11 +165,20 @@ button.btn {
   -webkit-flex-flow: row wrap;
   justify-content: space-around;
   min-width: 400px;
-  border-left: #DADCE0 1px solid;
+  border-left: #DADCE0 1px solid; */
+  background: #f3f2f1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  grid-template-columns: 3em 10px repeat(7, 1fr);
+  position: sticky;
+  top: 3em;
+  z-index: 10;
+  border-bottom: 2px solid #dadce0;
 }
 
 .weekday-header {
-  background-color: #F6F6F6;
+  /* background-color: #F6F6F6;
   color: #666;
   padding: 3px;
   margin: 0;
@@ -183,10 +192,12 @@ button.btn {
   border-top: #DADCE0 1px solid;
   border-right: #DADCE0 1px solid;
   border-bottom: 0px;
+   */
+  border-left: 1px solid #dadce0;
 }
 
 .calendar {
-  padding: 0;
+ /* padding: 0;
   margin: 0;
   display: flex;
   flex-flow: row wrap;
@@ -194,7 +205,11 @@ button.btn {
   justify-content: space-around;
   min-width: 400px;
   border-bottom: #DADCE0 1px solid;
-  border-left: #DADCE0 1px solid;
+  border-left: #DADCE0 1px solid; */
+  width: 100%;
+  display: grid;
+  grid-template-rows: 3em 3em auto;
+  position: absolute;
 }
 
 .day {
@@ -355,6 +370,8 @@ ul.tasks li a {
   grid-template-rows: 3em 3em auto;
   position: absolute;
 }
+
+
 
 .weekview {
     display: grid;
