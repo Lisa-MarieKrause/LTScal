@@ -10,40 +10,11 @@
       {% endfor %}
   </div>
   
-  <div class="content" style="grid-template-rows: auto">
+  <div class="content" style={{ "grid-template-rows: repeat("+ 29 +", 5em)" }}>
       {% for hour in hours %}
         <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
       {% endfor %}
-        <!--
-        <div class="weektime" style="grid-row:2">08:30</div>
-        <div class="weektime" style="grid-row:3">09:00</div>
-        <div class="weektime" style="grid-row:4">09:30</div>
-        <div class="weektime" style="grid-row:5">10:00</div>
-        <div class="weektime" style="grid-row:6">10:30</div>
-        <div class="weektime" style="grid-row:7">11:00</div>
-        <div class="weektime" style="grid-row:8">11:30</div>
-        <div class="weektime" style="grid-row:9">12:00</div>
-        <div class="weektime" style="grid-row:10">12:30</div>
-        <div class="weektime" style="grid-row:11">13:00</div>
-        <div class="weektime" style="grid-row:12">13:30</div>
-        <div class="weektime" style="grid-row:13">14:00</div>
-        <div class="weektime" style="grid-row:14">14:30</div>
-        <div class="weektime" style="grid-row:15">15:00</div>
-        <div class="weektime" style="grid-row:16">15:30</div>
-        <div class="weektime" style="grid-row:17">16:00</div>
-        <div class="weektime" style="grid-row:18">16:30</div>
-        <div class="weektime" style="grid-row:19">17:00</div>
-        <div class="weektime" style="grid-row:20">17:30</div>
-        <div class="weektime" style="grid-row:21">18:00</div>
-        <div class="weektime" style="grid-row:22">18:30</div>
-        <div class="weektime" style="grid-row:23">19:00</div>
-        <div class="weektime" style="grid-row:24">19:30</div>
-        <div class="weektime" style="grid-row:25">20:00</div>
-        <div class="weektime" style="grid-row:26">20:30</div>
-        <div class="weektime" style="grid-row:27">21:00</div>
-        <div class="weektime" style="grid-row:28">21:30</div>
-        <div class="weektime" style="grid-row:29">22:00</div>
-        -->
+
         <div class="filler-col"></div>
         <div class="col" style="grid-column:3"></div>
         <div class="col" style="grid-column:4"></div>
