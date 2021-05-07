@@ -12,7 +12,7 @@
   
   <div class="content" style={{ "grid-template-rows: repeat(" + hours|string + ",3em)" }}>
       {% for hour in range(hours) %}
-        <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ day_start.strftime('%HH:%mm') }} </div>
+        <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
       {% endfor %}
         <!--
         <div class="weektime" style="grid-row:2">08:30</div>
