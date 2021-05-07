@@ -386,10 +386,7 @@ ul.tasks li a {
 }
 
 .day-week {
-    display: grid;
-    place-content: center;
-    text-align: center;
-    grid-template-columns: 3em 10px repeat(7, 1fr);
+    border-left: 1px solid #dadce0;
 }
 
 .content {
