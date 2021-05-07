@@ -28,7 +28,7 @@ from flask_calendar.actions import (
     calendar_view_action,
 )
 
-from flask_calendar.app_utils import task_details_for_markup
+from flask_calendar.app_utils import task_details_for_markup, business_hours
 
 def create_app(config_overrides: Dict = None):
     logging.debug(": function create_app running...")
@@ -126,9 +126,14 @@ def create_app(config_overrides: Dict = None):
         hide_repetition_task_instance_action,
         methods=["POST"],
     )
-    logging.debug(": before app.jinja_env")
+    
+    # setting jinja filters for in-html-usage
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
-    logging.debug(": before return")
+    
+    @app.context_processor
+    def utility_processor():
+        return dict(business_hours=business_hours)
+    
     return app
 
 logging.debug('creating app')

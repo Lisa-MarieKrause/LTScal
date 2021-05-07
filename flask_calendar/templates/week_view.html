@@ -11,7 +11,7 @@
   </div>
   
   <div class="content" style={{ "grid-template-rows: repeat(" + hours|string + ",3em)" }}>
-      {% for hour in range(hours) %}
+      {% for hour in business_hours(day_start, day_end, interval) %}
         <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
       {% endfor %}
         <!--

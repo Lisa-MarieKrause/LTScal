@@ -11,6 +11,7 @@ from flask_calendar.authorization import Authorization
 from flask_calendar.calendar_data import CalendarData
 from flask_calendar.constants import SESSION_ID
 from flask_calendar.gregorian_calendar import GregorianCalendar
+from datetime import datetime, timedelta
 
 cache = SimpleCache()
 
@@ -84,6 +85,23 @@ def get_session_username(session_id: str) -> str:
 def task_details_for_markup(details: str) -> str:
     if not current_app.config["AUTO_DECORATE_TASK_DETAILS_HYPERLINK"]:
         return details
+        
+def business_hours(day_start: str, day_end: str, mins: int):
+    '''
+        return string array of day times
+        array begins at day_start o' clock
+        array ends at day_end o' clock
+        array intervals given in minutes
+    '''
+    hour = datetime.strptime(day_start, '%H:%M')
+    day_end = datetime.strptime(day_end, '%H:%M')
+    interval = (day_end - day_start).seconds / 60 # total count of minutes
+    interval = interval/mins # gives the length of the array
+    business_hours = [datetime.strftime(hour, '%H:%M')]
+    for i in range(int(interval)):
+        hour += timedelta(minutes = mins)
+        business_hours += datetime.strftime(hour, '%H:%M')
+    return business_hours
 
     decorated_fragments = []
 
