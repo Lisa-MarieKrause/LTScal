@@ -46,7 +46,7 @@
 
     <ul class="calendar" id="calendar">
         {% if view == "week" %}
-          <h6 week>week</h6>
+          {% include "week_view.html" %}
         {% endif %}
         
         {% if view == "month" %}
