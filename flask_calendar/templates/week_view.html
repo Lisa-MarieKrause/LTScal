@@ -1,4 +1,6 @@
-<ul class="calendar-header-week">
+<div class="weekcalendar" id="weekcalendar">
+
+  <div class="calendar-header-week">
     {% for weekday_header in weekdays_headers %}
         {% if weekday_header == "" %}
             <li class="filler"></li>
@@ -6,30 +8,27 @@
             <li class="weekday-header">{{ weekday_header }}</li>
         {% endif %}
     {% endfor %}
-</ul>
+  </div>
+  
+  <div class="content">
+      {% for day in week_days %}
+      <li
+        {% if day.month != month %}
+          class="day-week othermonth"
+        {% else %}
+          class="day-week"
+        {% endif %}
+        data-year="{{ day.year }}"
+        data-month="{{ day.month }}"
+        data-day="{{ day.day }}">
 
-<ul class="weekcalendar" id="weekcalendar">
-
-<div class="container">
-{% for day in week_days %}
-<li
-    {% if day.month != month %}
-        class="day-week othermonth"
-    {% else %}
-        class="day-week"
-    {% endif %}
-    data-year="{{ day.year }}"
-    data-month="{{ day.month }}"
-    data-day="{{ day.day }}">
-
-    {% if day.day == current_day and day.month == current_month and day.year == current_year %}
+        {% if day.day == current_day and day.month == current_month and day.year == current_year %}
             <span class="daynumber-current">
-    {% else %}
+        {% else %}
             <span class="daynumber">
-    {% endif %}
-    {{ day.day }}</span>
+        {% endif %}
+        {{ day.day }}</span>
     
-    <div class="content">
         <div class="time" style="grid-row:1">01:00</div>
         <div class="time" style="grid-row:2">02:00</div>
         <div class="time" style="grid-row:3">03:00</div>
