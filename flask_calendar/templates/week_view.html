@@ -1,40 +1,13 @@
 <div class="weekcalendar" id="weekcalendar">
 
   <div class="calendar-header-week">
-    <!-- {% for weekday_header in weekdays_headers %}
-        {% if weekday_header == "" %}
-            <li class="filler"></li>
-        {% else %}
-            <li class="weekday-header">{{ weekday_header }}</li>
-        {% endif %}
-    {% endfor %}
-    -->
-    {% for day in days %}
-    {% if day == "" %}
-        <div class="filler"></div>
-    {% else %}
-        <div class="day-week">{{ day }}</div>
-    {% endif %}
-    {% endfor %}
-    <!--
-    {% for day in week_days %}
-    <li
-      {% if day.month != month %}
-        class="day-week othermonth"
-      {% else %}
-        class="day-week"
-      {% endif %}
-      data-year="{{ day.year }}"
-      data-month="{{ day.month }}"
-      data-day="{{ day.day }}">
-
-      {% if day.day == current_day and day.month == current_month and day.year == current_year %}
-          <span class="daynumber-current">
-      {% else %}
-          <span class="daynumber">
-      {% endif %}
-      {{ day.day }}</span>
-    -->
+      {% for day in days %}
+          {% if day == "" %}
+              <div class="filler"></div>
+          {% else %}
+              <div class="day-week">{{ day }}</div>
+          {% endif %}
+      {% endfor %}
   </div>
   
   <div class="content">
