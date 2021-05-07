@@ -178,7 +178,7 @@ button.btn {
 }
 
 .weekday-header {
-  /* background-color: #F6F6F6;
+  background-color: #F6F6F6;
   color: #666;
   padding: 3px;
   margin: 0;
@@ -192,8 +192,7 @@ button.btn {
   border-top: #DADCE0 1px solid;
   border-right: #DADCE0 1px solid;
   border-bottom: 0px;
-   */
-  border-left: 1px solid #dadce0;
+  /* border-left: 1px solid #dadce0; */
 }
 
 .calendar {
