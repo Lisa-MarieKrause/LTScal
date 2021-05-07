@@ -430,3 +430,8 @@ ul.tasks li a {
   font-weight: bold;
   font-size: 80%;
 }
+
+.calendar1 {
+  background-color: #d7dbef;
+  border-color: #bcc3e5;
+}
