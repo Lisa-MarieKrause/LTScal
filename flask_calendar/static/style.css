@@ -361,18 +361,6 @@ ul.tasks li a {
 /* month view specifics */
 /* ---------------------*/
 
-.monthcalendar {
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  justify-content: space-around;
-  min-width: 400px;
-  border-bottom: #DADCE0 1px solid;
-  border-left: #DADCE0 1px solid;
-}
-
 
 /* ---------------------*/
 /* week view specifics  */
