@@ -199,6 +199,9 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             display_view_past_button=current_app.config["SHOW_VIEW_PAST_BUTTON"],
             weekdays_headers=weekdays_headers,
             view = view,
+            day_start = current_app.config["DAY_START"],
+            day_end = current_app.config["DAY_END"],
+            hours = (current_app.config["WORKING_HOURS"]*2+1),
         ),
     )
 

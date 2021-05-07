@@ -34,6 +34,11 @@ HIDE_PAST_TASKS = False
 # Default view (possible: 'day', 'week', 'month') 
 VIEW = 'month'
 
+# Default start end end of businessday (for week and day view)
+DAY_START = "08:00"
+DAY_END = "22:00"
+WORKING_HOURS = 14 # (=DAY_END - DAY_START)
+
 # days past to keep hidden tasks (future ones always kept) counting all months as 31 days long
 DAYS_PAST_TO_KEEP_HIDDEN_TASKS = 62
 

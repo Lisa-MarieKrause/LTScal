@@ -392,7 +392,6 @@ ul.tasks li a {
 .content {
   display: grid;
   grid-template-columns: 3em 10px repeat(7, 1fr);
-  grid-template-rows: repeat(24, 3em);
 }
 
 .weektime {
