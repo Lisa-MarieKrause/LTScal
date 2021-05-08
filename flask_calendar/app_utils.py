@@ -86,6 +86,36 @@ def task_details_for_markup(details: str) -> str:
     if not current_app.config["AUTO_DECORATE_TASK_DETAILS_HYPERLINK"]:
         return details
         
+def calendar_row(start_time: str) -> int:
+    '''
+        return row number to situate the event
+        depends on:
+        DAY_START, INTERVAL
+    '''
+    day_start = current_app.config["DAY_START"]
+    interval = current_app.config["INTERVAL"] #in mins
+    day_start = datetime.strptime(day_start, '%H:%M')
+    start_time = datetime.strptime(start_time, '%H:%M')
+    diff = (start_time - day_start).seconds / 60 #mins
+    # +1 because there is no rownumber 0
+    # +1 because hour labels are written on buttom border
+    return int(diff / interval)+2
+    
+def calendar_span(end_time: str, start_time: str) -> int:
+    '''
+        return how many rows an event spans
+        depends on: INTERVAL
+    '''
+    start_time = datetime.strptime(start_time, '%H:%M')
+    end_time = datetime.strptime(end_time, '%H:%M')
+    interval = current_app.config["INTERVAL"] #in mins
+    diff = (end_time - start_time).seconds / 60 #mins
+    if diff == 0:
+        return -1
+    else:
+        return int(diff/interval)
+    
+    
 def business_hours(day_start: str, day_end: str, mins: int):
     '''
         return string array of day times
