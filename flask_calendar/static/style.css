@@ -409,6 +409,7 @@ ul.tasks li a {
   border-right: 1px solid #dadce0;
   grid-row: 1/span 24;
   grid-column: span 1;
+  cursor: pointer;
 }
 
 .filler-col {
@@ -420,17 +421,25 @@ ul.tasks li a {
 .row {
   grid-column: 2/-1;
   border-bottom: 1px solid #dadce0;
+  cursor: pointer;
 }
 
 .training {
+  background-color: #d7dbef;
   border-radius: 5px;
   padding: 5px;
   margin-right: 10px;
   font-weight: bold;
   font-size: 80%;
+  cursor: pointer;
 }
 
 .calendar1 {
   background-color: #d7dbef;
   border-color: #bcc3e5;
+}
+
+.training a {
+    color: #F0F0F0;
+
 }
