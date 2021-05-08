@@ -32,8 +32,11 @@ from flask_calendar.actions import (
     update_task_day_action,
     calendar_view_action,
 )
-
-from flask_calendar.app_utils import task_details_for_markup, business_hours
+from flask_calendar.app_utils import (
+    task_details_for_markup,
+    calendar_row,
+    calendar_span
+)
 
 def create_app(config_overrides: Dict = None):
     logging.debug(": function create_app running...")
@@ -134,7 +137,8 @@ def create_app(config_overrides: Dict = None):
     
     # setting jinja filters for in-html-usage
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
-    
+    app.jinja_env.filters["calendar_row"] = calendar_row
+    app.jinja_env.filters["calendar_span"] = calendar_span
     return app
 
 logging.debug('creating app')

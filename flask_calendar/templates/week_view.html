@@ -1,5 +1,6 @@
 <div class="weekcalendar" id="weekcalendar">
 
+  <!-- calendar header -->
   <div class="calendar-header-week">
       {% for day in days %}
           {% if day == "" %}
@@ -10,48 +11,39 @@
       {% endfor %}
   </div>
   
-  <div class="content" style="{{ "grid-template-rows: repeat(" ~ 29 ~ ", 3em)" }}">
-      {% for hour in hours %}
-        <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
-      {% endfor %}
-
+  <!-- calendar content; row count depending on business hours array -->
+  <div class="content" style="{{ "grid-template-rows: repeat(" ~ hours|length ~ ", 3em)" }}">
+        <!-- fill first column with business hours -->
+        {% for hour in hours %}
+            <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
+        {% endfor %}
         <div class="filler-col"></div>
-        <div class="col" style="grid-column:3"></div>
-        <div class="col" style="grid-column:4"></div>
-        <div class="col" style="grid-column:5"></div>
-        <div class="col" style="grid-column:6"></div>
-        <div class="col" style="grid-column:7"></div>
-        <div class="col" style="grid-column:8"></div>
-        <div class="col" style="grid-column:9"></div>
-        <div class="row" style="grid-row:1"></div>
-        <div class="row" style="grid-row:2"></div>
-        <div class="row" style="grid-row:3"></div>
-        <div class="row" style="grid-row:4"></div>
-        <div class="row" style="grid-row:5"></div>
-        <div class="row" style="grid-row:6"></div>
-        <div class="row" style="grid-row:7"></div>
-        <div class="row" style="grid-row:8"></div>
-        <div class="row" style="grid-row:9"></div>
-        <div class="row" style="grid-row:10"></div>
-        <div class="row" style="grid-row:11"></div>
-        <div class="row" style="grid-row:12"></div>
-        <div class="row" style="grid-row:13"></div>
-        <div class="row" style="grid-row:14"></div>
-        <div class="row" style="grid-row:15"></div>
-        <div class="row" style="grid-row:16"></div>
-        <div class="row" style="grid-row:17"></div>
-        <div class="row" style="grid-row:18"></div>
-        <div class="row" style="grid-row:19"></div>
-        <div class="row" style="grid-row:20"></div>
-        <div class="row" style="grid-row:21"></div>
-        <div class="row" style="grid-row:22"></div>
-        <div class="row" style="grid-row:23"></div>
-        <div class="row" style="grid-row:24"></div>
-        <div class="row" style="grid-row:25"></div>
-        <div class="row" style="grid-row:26"></div>
-        <div class="row" style="grid-row:27"></div>
-        <div class="row" style="grid-row:28"></div>
-        <div class="row" style="grid-row:29"></div>
-        <div class="training calendar1" style="grid-column:3;grid-row:1/span 2">Training1</div>
+        <!-- initialize week columns -->
+        {% for i in range(7) %}
+            <div class="col" style="grid-column:{{i+2}}"></div>
+        {% endfor %}
+        <!-- initialize rows; count depending on business hours array -->
+        {% for i in range((hours|length)) %}
+            <div class="row" style="grid-row:{{ i }}"></div>
+        {% endfor %}
+        
+        <!-- load training data -->
+        {% for day in days %}
+            {% if day.month|string in tasks and day.day|string in tasks[day.month|string] %}
+                {% for task in tasks[day.month|string][day.day|string]|sort(attribute="start_time") %}
+                <div class ="training calendar1"
+                    data-year="{{ day.year }}"
+                    data-month="{{ day.month }}"
+                    data-day="{{ day.day }}"
+                    data-id="{{ task["id"] }}"
+                    {% if "repetition_type" in task %}data-recurrent="1"{% endif %}
+                    style="grid-column:{{ ((days[loop.index])|int - 3) }};grid-row:
+                    {{ task["start_time"] | calendar_row}}/span
+                    {{ task["end_time"] |calendar_span(task["start_time"]) }}">
+                    {{ task["title"] + task["start_time"] + task["details"]}}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
     </div>
 </div>
