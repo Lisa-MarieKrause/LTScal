@@ -25,23 +25,15 @@
       <table class="offset" id="dayTable">
   
       <tbody>
-        <tr>
-          <td class="headcol" data-hour="9:30">09:30</td>
-          
-          <td data-courtNo1="1">1</td>
-          <td data-courtNo="2">2</td>
-          <td data-courtNo="3">3</td>
-          <td data-courtNo="4">4</td>
-          
-        </tr>
-        <tr id="10:00" >
-          <td class="headcol" data-hour="10:00">10:00</td>
+        {% for hour in hours %}
+        <tr id={{hour}}>
+
+          <td class="headcol" data-hour="{{ hour }}">{{hour}}</td>
           {% for day in days %}
-              {% if day.month|string in tasks and day.day|string in tasks[day.month|string] %}
-                  {% for task in tasks[day.month|string][day.day|string]|sort(attribute="start_time") %}
-                      {% if "10:00" == task["start_time"] %}
-                      <!-- TODO add if TC = 1 -->
-                      <td id="court1_10:00" data-courtNo="1"
+              {% if (day.month|string in tasks) and (day.day|string in tasks[day.month|string]) and (tasks[day.month|string][day.day|string]|selectattr("start_time", "equalto", hour)|list|length > 0) %}
+                  {% for task in tasks[day.month|string][day.day|string]|selectattr("start_time", "equalto", hour) %}
+                      {% if task %}
+                      <td data-courtNo="1"
                       class="training" id="training"
                       rowspan="2"
                       data-year="{{ day.year }}"
@@ -51,39 +43,32 @@
                       {% if "repetition_type" in task %}data-recurrent="1"{% endif %}>
                       {{ task["title"] }}
                       </td>
+                      {% else %}
+                      <td data-courtNo="1">1</td>
                       {% endif %}
+                      <td data-courtNo="2">2</td>
+                      <td data-courtNo="3">3</td>
+                      <td data-courtNo="4">4</td>
+                      <script> console.log("task"); </script>
                   {% endfor %}
+              {% else %}
+                  <td data-courtNo="1">1</td>
+                  <td data-courtNo="2">2</td>
+                  <td data-courtNo="3">3</td>
+                  <td data-courtNo="4">4</td>
+                  <script> console.log("no task in hour"); </script>
               {% endif %}
           {% endfor %}
-          
-          <td data-courtNo="2">2</td>
-          <td data-courtNo="3">3</td>
-          <td data-courtNo="4">4</td>
-          
         </tr>
-        <tr id="10:30">
-          <td class="headcol" data-hour="10:30">10:30</td>
-          <td data-courtNo1="1">1</td>
-          <td data-courtNo="2">2</td>
-          <td data-courtNo="3">3</td>
-          <td data-courtNo="4">4</td>
-          
-        </tr>
-        <tr>
-          <td class="headcol" data-hour="11:00">11:00</td>
-          
-          <td data-courtNo1="1">1</td>
-          <td data-courtNo="2">2</td>
-          <td data-courtNo="3">3</td>
-          <td data-courtNo="4">4</td>
-          
-        </tr>
+        {% endfor %}
       </tbody>
       
       </table>
     </div>
   
   </div>
+  
+  <!--<p onload="cleanTableCells()"> test </p>-->
   
 </div>
 
@@ -102,11 +87,15 @@
         }
     };
 
-    window.onload = function () {
+document.addEventListener("DOMContentLoaded", function() {
         console.log('Dokument geladen');
         var table = document.getElementById("dayTable");
         var events = document.getElementsByTagName("td");
         deleteSpannedCells(table, events);
-    };
+    }, false);
+
+function debug() {
+  console.log("debug");
+};
 
 </script>
