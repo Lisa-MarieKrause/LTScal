@@ -1,1 +1,112 @@
-<h6>DAY</h6>
+<div class="daycalendar">
+  
+  <div class="outer">
+      
+    <table>
+      <thead>
+        <tr>
+          <th class="headcol"></th>
+          {% for day in days %}
+          <th colspan="4">{{ weekdays_headers ~ ", " ~ days.day }}</th>
+          {% endfor %}
+        </tr>
+        <tr>
+            <th class="headcol"></th>
+            <th>TC1</th>
+            <th>TC2</th>
+            <th>TC3</th>
+            <th>TC4</th>
+        </tr>
+      </thead>
+    </table>
+  
+    <!-- timeline and event loading -->
+    <div class="wrap">
+      <table class="offset" id="dayTable">
+  
+      <tbody>
+        <tr>
+          <td class="headcol" data-hour="9:30">09:30</td>
+          
+          <td data-courtNo1="1">1</td>
+          <td data-courtNo="2">2</td>
+          <td data-courtNo="3">3</td>
+          <td data-courtNo="4">4</td>
+          
+        </tr>
+        <tr id="10:00" >
+          <td class="headcol" data-hour="10:00">10:00</td>
+          {% for day in days %}
+              {% if day.month|string in tasks and day.day|string in tasks[day.month|string] %}
+                  {% for task in tasks[day.month|string][day.day|string]|sort(attribute="start_time") %}
+                      {% if "10:00" == task["start_time"] %}
+                      <!-- TODO add if TC = 1 -->
+                      <td id="court1_10:00" data-courtNo="1"
+                      class="training" id="training"
+                      rowspan="2"
+                      data-year="{{ day.year }}"
+                      data-month="{{ day.month }}"
+                      data-day="{{ day.day }}"
+                      data-id="{{ task["id"] }}"
+                      {% if "repetition_type" in task %}data-recurrent="1"{% endif %}>
+                      {{ task["title"] }}
+                      </td>
+                      {% endif %}
+                  {% endfor %}
+              {% endif %}
+          {% endfor %}
+          
+          <td data-courtNo="2">2</td>
+          <td data-courtNo="3">3</td>
+          <td data-courtNo="4">4</td>
+          
+        </tr>
+        <tr id="10:30">
+          <td class="headcol" data-hour="10:30">10:30</td>
+          <td data-courtNo1="1">1</td>
+          <td data-courtNo="2">2</td>
+          <td data-courtNo="3">3</td>
+          <td data-courtNo="4">4</td>
+          
+        </tr>
+        <tr>
+          <td class="headcol" data-hour="11:00">11:00</td>
+          
+          <td data-courtNo1="1">1</td>
+          <td data-courtNo="2">2</td>
+          <td data-courtNo="3">3</td>
+          <td data-courtNo="4">4</td>
+          
+        </tr>
+      </tbody>
+      
+      </table>
+    </div>
+  
+  </div>
+  
+</div>
+
+<script>
+
+    function deleteSpannedCells(table, spanEvents) {
+        // delete cells which are spanned by a longer event
+        for (var i = 0; i < spanEvents.length; i++) {
+            if ( spanEvents[i].rowSpan > 1) {
+                for( var row = 1; row < spanEvents[i].rowSpan; row++) {
+                    var nextrowIndex = spanEvents[i].parentNode.rowIndex + row;
+                    var nextrow = table.rows[nextrowIndex];
+                    nextrow.deleteCell(1); //currently only TC1 --> TODO: as parameter
+                }
+            }
+        }
+    };
+
+    window.onload = function () {
+        console.log('Dokument geladen');
+        var table = document.getElementById("dayTable");
+        var events = document.getElementsByTagName("td");
+        deleteSpannedCells(table, events);
+    };
+
+</script>

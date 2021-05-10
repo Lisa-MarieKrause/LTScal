@@ -369,32 +369,57 @@ ul.tasks li a {
 .weekcalendar {
   width: 100%;
   display: grid;
-  grid-template-rows: 3em 3em auto;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   position: absolute;
+  border: 2px solid #dadce0;
 }
 
-.calendar-header-week {
+.weekcalendar .calendar-header-week {
     background: #f3f2f1;
+    grid-column: 2/9;
+    grid-row: 1;
     display: grid;
-    place-content: center;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
     text-align: center;
-    grid-template-columns: 3em 10px repeat(7, 1fr);
-    position: sticky;
     top: 3em;
-    z-index: 10;
     border-bottom: 2px solid #dadce0;
 }
 
-.day-week {
-    border-left: 1px solid #dadce0;
+.filler {
+  display: grid;
+  grid-row: 1;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+  border-right: 1px solid #dadce0;
 }
 
-.content {
+.day-week {
+    display: grid;
+    grid-row: 1;
+    border-right: 1px solid #dadce0;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+}
+
+.weekcalendar .timeline {
+    display: grid;
+    grid-column: 1;
+    grid-template-columns: 1fr 5px;
+    grid-template-rows: subgrid;
+}
+
+.weekcalendar .content {
   display: grid;
-  grid-template-columns: 3em 10px repeat(7, 1fr);
+  grid-column: 2/9;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+  /*border: 1px solid #dadce0; */
+  /*top: 3em;*/
 }
 
 .weektime {
+ /* display: grid; */
   grid-column: 1;
   text-align: right;
   align-self: end;
@@ -403,23 +428,37 @@ ul.tasks li a {
   bottom: -1ex;
   color: #70757a;
   padding-right: 2px;
+  /*grid-template-columns: subgrid;
+  grid-template-rows: subgrid;*/
 }
 
-.col {
+.weekcalendar .col {
   border-right: 1px solid #dadce0;
-  grid-row: 1/span 24;
-  grid-column: span 1;
+  display: grid;
+  /*grid-column: 1;*/
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
   cursor: pointer;
 }
 
-.filler-col {
-  grid-row: 1/-1;
-  grid-column: 2;
-  border-right: 1px solid #dadce0;
+.court {
+    border-right: 1px solid #dadce0;
+    display: grid
+    grid-column: span 1;
+    grid-template-columns: subgrid;
 }
 
-.row {
-  grid-column: 2/-1;
+.filler-col {
+  display: grid;
+  grid-column: 2;
+  border-right: 1px solid #dadce0;
+  grid-template-rows: subgrid;
+  background: #f3f2f1;
+}
+
+.weekcalendar .row {
+  display: grid;
+  grid-column: 2/9;
   border-bottom: 1px solid #dadce0;
   cursor: pointer;
 }
@@ -441,5 +480,171 @@ ul.tasks li a {
 
 .training a {
     color: #F0F0F0;
+
+}
+
+
+/* ---------------------*/
+/* day view specifics  */
+/* ---------------------*/
+
+.daycalendar {
+    margin: 0 auto;
+  max-width: 1280px;
+  min-width: 500px;
+
+  box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.2) ,0px 3px 7px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.secondary {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+button.secondary {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button.secondary:hover {
+  background: #fafafa;
+}
+button.secondary:active {
+  box-shadow: none;
+}
+button.secondary:focus {
+  outline: 0;
+}
+
+.icon {
+  font-size: 1.5rem;
+  margin: 0 1rem;
+  text-align: center;
+  cursor: pointer;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
+
+.icon:hover {
+  color: red;
+}
+
+tbody {
+    position: relative;
+  top: 100px;
+}
+
+table {
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+}
+
+.outer {
+  position:relative;
+}
+
+.headcol {
+  width: 60px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.5);
+  padding: 0.25rem 0;
+  text-align: center;
+  border: 0;
+  position: relative;
+  top: -12px;
+  border-bottom: 1px solid transparent;
+}
+
+thead th {
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.9);
+  padding: 1rem;
+}
+
+thead {
+    z-index: 2;
+    background: white;
+    border-bottom: 2px solid #ddd;
+
+}
+
+tr, tr td {
+  height: 20px;
+}
+td {
+  text-align: center;
+}
+tr:nth-child(odd) td:not(.headcol) {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+tr:nth-child(even) td:not(.headcol) {
+  border-bottom: 1px solid #eee;
+}
+
+tr td {
+  border-right: 1px solid #eee;
+  padding: 0;
+  white-space: none;
+  word-wrap: nowrap;
+}
+
+tbody tr td {
+  position: relative;
+  vertical-align: top;
+  height: 40px;
+  padding: 0.25rem 0.25rem 0 0.25rem;
+  width: auto;
+
+}
+
+td:hover:after {
+  content: "+";
+  vertical-align: middle;
+  font-size: 1.875rem;
+  font-weight: 100;
+  color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+}
+
+.wrap {
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+    max-width: 1280px;
+  height: 500px;
+  border-radius: 8px;
+}
+
+thead {
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+thead th {
+
+  text-align: center;
+  width: 100%;
+
+}
+
+.today {
+  color: red;
+}
+
+.offset {
 
 }

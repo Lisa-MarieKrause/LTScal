@@ -1,36 +1,30 @@
-<div class="weekcalendar" id="weekcalendar" style="grid-template-rows: repeat {{hours|length + 2}}, 1fr);">
+<div class="weekcalendar" id="weekcalendar">
 
   <!-- calendar header -->
   <div class="calendar-header-week">
       {% for day in days %}
           {% if day == "" %}
-              <!--<div class="filler" style="grid-column:{{ loop.index }};"></div>-->
+              <div class="filler" style="grid-template-columns: 3em 10px repeat(1, 1fr)"></div>
           {% else %}
-              <div class="day-week" style="grid-column:{{ loop.index-1 }};">{{ weekdays_headers[loop.index-1] ~ ", "~ day.day ~ "." ~ day.month ~ "." ~ day.year}}</div>
+              <div class="day-week">{{ weekdays_headers[loop.index-1] ~ ", "~ day.day ~ "." ~ day.month ~ "." ~ day.year}}</div>
           {% endif %}
       {% endfor %}
   </div>
-
+  
   <!-- calendar content; row count depending on business hours array -->
-
-  <div class="timeline" id="timeline" style="grid-row: 2/{{ hours|length + 1}};">
+  <ul class="content" id="content" style="{{ "grid-template-rows: repeat(" ~ hours|length ~ ", 3em)" }}">
         <!-- fill first column with business hours -->
         {% for hour in hours %}
-            <div class="weektime" style="grid-row:{{ loop.index}}">{{ hour }} </div>
+            <div class="weektime" style={{ "grid-row:" + (loop.index)|string }}>{{ hour }} </div>
         {% endfor %}
-        
-        <div class="filler-col" style="grid-row:1/{{ hours|length + 1}};" ></div>
-  </div>
-  
-  <!--<div class="content" id="content" style="grid-row: 2/{{ hours|length + 1}};">-->
-
+        <div class="filler-col"></div>
         <!-- initialize rows; count depending on business hours array -->
         {% for i in range((hours|length)) %}
-            <div class="row" style="grid-row:{{ i+1}};"></div>
+            <div class="row" style="grid-row:{{ i }}"></div>
         {% endfor %}
         <!-- initialize week columns -->
         {% for i in range(7) %}
-            <div class="col" data-day="{{ days[i+1].day }}" style="grid-row:2/{{ hours|length +1 }};grid-column:{{ i+1 }};">
+            <div class="col" data-day="{{ days[i+1].day }}" style="grid-column:{{i+2}}">
             </div>
         {% endfor %}
         
@@ -46,7 +40,7 @@
                     data-id="{{ task["id"] }}"
                     {% if "repetition_type" in task %}data-recurrent="1"{% endif %}
                     style="grid-column:{{ ((days[loop.index])|int - 3) }};grid-row:
-                    {{ (task["start_time"] | calendar_row) + 1}}/span
+                    {{ task["start_time"] | calendar_row}}/span
                     {{ task["end_time"] |calendar_span(task["start_time"]) }}">
                     {{ task["title"] }}
                     <p class="accordion-hidden">
@@ -86,10 +80,10 @@
                 {% endfor %}
             {% endif %}
         {% endfor %}
-    <!--</div> -->
+    </ul>
 </div>
 
-<!--
+
 <script type="text/javascript">
     // skipped dragging (needed lots of adjustments and is just nice to have)
 
@@ -146,4 +140,3 @@ document.getElementById("content").onclick = function(eventData) {
 };
 </script>
 
--->
