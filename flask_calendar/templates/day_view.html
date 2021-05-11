@@ -1,4 +1,4 @@
-<div class="daycalendar">
+<div class="daycalendar" id= "daycalendar">
   
   <div class="outer">
       
@@ -7,7 +7,7 @@
         <tr>
           <th class="headcol"></th>
           {% for day in days %}
-          <th colspan="4">{{ weekdays_headers ~ ", " ~ days.day }}</th>
+          <th colspan="4">{{ weekdays_headers ~ ", " ~ days[0].day }}</th>
           {% endfor %}
         </tr>
         <tr>
@@ -26,7 +26,7 @@
   
       <tbody>
         {% for hour in hours %}
-        <tr id={{hour}}>
+        <tr id={{hour}} data-day="{{days[0].day}}">
 
           <td class="headcol" data-hour="{{ hour }}">{{hour}}</td>
           {% for day in days %}
@@ -39,23 +39,24 @@
                       data-year="{{ day.year }}"
                       data-month="{{ day.month }}"
                       data-day="{{ day.day }}"
+                      data-hour="{{ hour }}"
                       data-id="{{ task["id"] }}"
                       {% if "repetition_type" in task %}data-recurrent="1"{% endif %}>
                       {{ task["title"] }}
                       </td>
                       {% else %}
-                      <td data-courtNo="1">1</td>
+                      <td data-courtNo="1" data-hour="{{ hour }}"></td>
                       {% endif %}
-                      <td data-courtNo="2">2</td>
-                      <td data-courtNo="3">3</td>
-                      <td data-courtNo="4">4</td>
+                      <td data-courtNo="2" data-hour="{{ hour }}"></td>
+                      <td data-courtNo="3" data-hour="{{ hour }}"></td>
+                      <td data-courtNo="4" data-hour="{{ hour }}"></td>
                       <script> console.log("task"); </script>
                   {% endfor %}
               {% else %}
-                  <td data-courtNo="1">1</td>
-                  <td data-courtNo="2">2</td>
-                  <td data-courtNo="3">3</td>
-                  <td data-courtNo="4">4</td>
+                  <td data-courtNo="1" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="2" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="3" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="4" data-hour="{{ hour }}"></td>
                   <script> console.log("no task in hour"); </script>
               {% endif %}
           {% endfor %}
@@ -87,15 +88,35 @@
         }
     };
 
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         console.log('Dokument geladen');
         var table = document.getElementById("dayTable");
         var events = document.getElementsByTagName("td");
         deleteSpannedCells(table, events);
     }, false);
 
-function debug() {
-  console.log("debug");
-};
+    // event delegation
+    document.getElementById("daycalendar").onclick = function(eventData) {
+        console.log("any onclick event");
+        
+        if (eventData.target.nodeName === "TD" && eventData.target.className != "training") {
+            if (++clicksCounter == 1) {
+                // Single click behaviour (nothing)
+                clicksTimeout = setTimeout(function() { clicksCounter = 0; }, 300);
+            } else {
+                clearTimeout(clicksTimeout);
+                clicksCounter = 0;
+                var newTaskDay = eventData.target.parentNode.getAttribute("data-day");
+                var start = eventData.target.getAttribute("data-hour");
+                window.location = "/{{ calendar_id }}/{{ year }}/{{ month }}/{{ view }}/new_task?day=" + newTaskDay + "&start=" + start;
+            }
+            return;
+        }
+    };
+
+
+    function debug() {
+        console.log("debug");
+    };
 
 </script>
