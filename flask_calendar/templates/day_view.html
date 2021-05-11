@@ -1,1 +1,122 @@
-<h6>DAY</h6>
+<div class="daycalendar" id= "daycalendar">
+  
+  <div class="outer">
+      
+    <table>
+      <thead>
+        <tr>
+          <th class="headcol"></th>
+          {% for day in days %}
+          <th colspan="4">{{ weekdays_headers ~ ", " ~ days[0].day }}</th>
+          {% endfor %}
+        </tr>
+        <tr>
+            <th class="headcol"></th>
+            <th>TC1</th>
+            <th>TC2</th>
+            <th>TC3</th>
+            <th>TC4</th>
+        </tr>
+      </thead>
+    </table>
+  
+    <!-- timeline and event loading -->
+    <div class="wrap">
+      <table class="offset" id="dayTable">
+  
+      <tbody>
+        {% for hour in hours %}
+        <tr id={{hour}} data-day="{{days[0].day}}">
+
+          <td class="headcol" data-hour="{{ hour }}">{{hour}}</td>
+          {% for day in days %}
+              {% if (day.month|string in tasks) and (day.day|string in tasks[day.month|string]) and (tasks[day.month|string][day.day|string]|selectattr("start_time", "equalto", hour)|list|length > 0) %}
+                  {% for task in tasks[day.month|string][day.day|string]|selectattr("start_time", "equalto", hour) %}
+                      {% if task %}
+                      <td data-courtNo="1"
+                      class="training" id="training"
+                      rowspan="2"
+                      data-year="{{ day.year }}"
+                      data-month="{{ day.month }}"
+                      data-day="{{ day.day }}"
+                      data-hour="{{ hour }}"
+                      data-id="{{ task["id"] }}"
+                      {% if "repetition_type" in task %}data-recurrent="1"{% endif %}>
+                      {{ task["title"] }}
+                      </td>
+                      {% else %}
+                      <td data-courtNo="1" data-hour="{{ hour }}"></td>
+                      {% endif %}
+                      <td data-courtNo="2" data-hour="{{ hour }}"></td>
+                      <td data-courtNo="3" data-hour="{{ hour }}"></td>
+                      <td data-courtNo="4" data-hour="{{ hour }}"></td>
+                      <script> console.log("task"); </script>
+                  {% endfor %}
+              {% else %}
+                  <td data-courtNo="1" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="2" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="3" data-hour="{{ hour }}"></td>
+                  <td data-courtNo="4" data-hour="{{ hour }}"></td>
+                  <script> console.log("no task in hour"); </script>
+              {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+      
+      </table>
+    </div>
+  
+  </div>
+  
+  <!--<p onload="cleanTableCells()"> test </p>-->
+  
+</div>
+
+<script>
+
+    function deleteSpannedCells(table, spanEvents) {
+        // delete cells which are spanned by a longer event
+        for (var i = 0; i < spanEvents.length; i++) {
+            if ( spanEvents[i].rowSpan > 1) {
+                for( var row = 1; row < spanEvents[i].rowSpan; row++) {
+                    var nextrowIndex = spanEvents[i].parentNode.rowIndex + row;
+                    var nextrow = table.rows[nextrowIndex];
+                    nextrow.deleteCell(1); //currently only TC1 --> TODO: as parameter
+                }
+            }
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log('Dokument geladen');
+        var table = document.getElementById("dayTable");
+        var events = document.getElementsByTagName("td");
+        deleteSpannedCells(table, events);
+    }, false);
+
+    // event delegation
+    document.getElementById("daycalendar").onclick = function(eventData) {
+        console.log("any onclick event");
+        
+        if (eventData.target.nodeName === "TD" && eventData.target.className != "training") {
+            if (++clicksCounter == 1) {
+                // Single click behaviour (nothing)
+                clicksTimeout = setTimeout(function() { clicksCounter = 0; }, 300);
+            } else {
+                clearTimeout(clicksTimeout);
+                clicksCounter = 0;
+                var newTaskDay = eventData.target.parentNode.getAttribute("data-day");
+                var start = eventData.target.getAttribute("data-hour");
+                window.location = "/{{ calendar_id }}/{{ year }}/{{ month }}/{{ view }}/new_task?day=" + newTaskDay + "&start=" + start;
+            }
+            return;
+        }
+    };
+
+
+    function debug() {
+        console.log("debug");
+    };
+
+</script>

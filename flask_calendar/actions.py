@@ -25,6 +25,7 @@ from flask_calendar.app_utils import (
 from flask_calendar.authentication import Authentication
 from flask_calendar.calendar_data import CalendarData
 from flask_calendar.gregorian_calendar import GregorianCalendar
+from flask_calendar.db import get_db
 
 
 def get_authentication() -> Authentication:
@@ -187,6 +188,9 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days=GregorianCalendar.week_dates(year, month, current_day)
         days.insert(0,"")
         days.insert(0,"")
+    if view == "day":
+        weekdays_headers = GregorianCalendar.day_of_the_week(current_day, current_month, current_year)
+        days = [GregorianCalendar.day_date(current_day, current_month, current_year)]
     else:
         days=GregorianCalendar.month_days(year, month)
     
@@ -216,6 +220,57 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         ),
     )
 
+
+def new_view_task_action(calendar_id: str, year: int, month: int, view: str) -> Response:
+    GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
+
+    current_day, current_month, current_year = GregorianCalendar.current_date()
+    year = max(min(int(year), current_app.config["MAX_YEAR"]), current_app.config["MIN_YEAR"])
+    month = max(min(int(month), 12), 1)
+    month_names = GregorianCalendar.MONTH_NAMES
+
+    if current_month == month and current_year == year:
+        day = current_day
+    else:
+        day = 1
+    day = int(request.args.get("day", day))
+    start = request.args.get("start", "10:00", type=str)
+    task = {
+        "date": CalendarData.date_for_frontend(year, month, day),
+        "start_time": start,
+        "end_time": current_app.config["DAY_END"], #TODO: maybe start_time + 1hrs
+        "repetition_id": 0,
+        "court_count": 1,
+        "name": "",
+        "coach": "",
+        "max_participants": "",
+        "act_participants": "",
+        "color": ""
+    }
+    
+    emojis_enabled = current_app.config.get("EMOJIS_ENABLED", False)
+    
+    return cast(
+        Response,
+        render_template(
+            "new_task.html",
+            calendar_id=calendar_id,
+            year=year,
+            month=month,
+            view=view,
+            min_year=current_app.config["MIN_YEAR"],
+            max_year=current_app.config["MAX_YEAR"],
+            month_names=month_names,
+            task=task,
+            base_url=current_app.config["BASE_URL"],
+            editing=False,
+            emojis_enabled=emojis_enabled,
+            button_default_color_value=current_app.config["BUTTON_CUSTOM_COLOR_VALUE"],
+            buttons_colors=current_app.config["BUTTONS_COLORS_LIST"],
+            buttons_emojis=current_app.config["BUTTONS_EMOJIS_LIST"] if emojis_enabled else tuple(),
+        ),
+    )
+    
 @authenticated
 @authorized
 def new_task_action(calendar_id: str, year: int, month: int) -> Response:
@@ -240,7 +295,7 @@ def new_task_action(calendar_id: str, year: int, month: int) -> Response:
     }
 
     emojis_enabled = current_app.config.get("EMOJIS_ENABLED", False)
-
+    
     return cast(
         Response,
         render_template(
@@ -372,9 +427,43 @@ def update_task_action(calendar_id: str, year: str, month: str, day: str, task_i
             code=302,
         )
 
+def save_new_task_action(calendar_id: str, view: str) -> Response:
+    '''
+        TODO: hier connection to sqlite aufbauen und mit request form befüllen
+    '''
+    name = request.form['title']
+    date = request.form['date']
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    repetition_id = request.form.get('repeats', 0)
+    court_count = request.form['court_count']
+    coach = request.form.get('coach', "")
+    max_participants = request.form.get('max_participants')
+    act_participants = request.form.get('act_participants')
+    details = request.form["details"].replace("\r", "").replace("\n", "<br>")
+    color = request.form['color']
+    
+    if len(date) > 0:
+        date_fragments = re.split("-", date)
+        year = int(date_fragments[0])  # type: Optional[int]
+        month = int(date_fragments[1])  # type: Optional[int]
+        day = int(date_fragments[2])  # type: Optional[int]
+    else:
+        year = month = day = None
+    
+    # TODO: create repetion entries
+    
+    db = get_db()
+    db.execute(
+        'INSERT INTO schedule (date, start_time, end_time, repetition_id, court_count, name, coach, max_participants, act_participants, details, color)'
+        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (date, start_time, end_time, repetition_id, court_count, name, coach, max_participants, act_participants, details, color)
+    )
+    db.commit()
+    return redirect("{}/{}/{}?y={}&m={}".format(current_app.config["BASE_URL"], calendar_id, view, year, month))
 
-@authenticated
-@authorized
+#@authenticated
+#@authorized
 def save_task_action(calendar_id: str) -> Response:
     title = request.form["title"].strip()
     startdate = request.form.get("date", "")

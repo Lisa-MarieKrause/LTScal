@@ -5,7 +5,6 @@ if platform.system() == 'Linux':
     logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
 else:
         logging.basicConfig(filename='/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal-pythonanywhere.log',level=logging.DEBUG)
-    
 from datetime import datetime
 import locale
 import os
@@ -31,6 +30,8 @@ from flask_calendar.actions import (
     update_task_action,
     update_task_day_action,
     calendar_view_action,
+    new_view_task_action,
+    save_new_task_action
 )
 from flask_calendar.app_utils import (
     task_details_for_markup,
@@ -38,12 +39,23 @@ from flask_calendar.app_utils import (
     calendar_span
 )
 
+
+# define instance path (containing sqlite DB) relative to operating system
+if platform.system() == 'Linux':
+    instace_path="/home/Lii544/Projects/LTScal/instance"
+else:
+    instance_path="/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal/instance"
+
 def create_app(config_overrides: Dict = None):
     logging.debug(": function create_app running...")
-    app = flask.Flask(__name__)
+    app = flask.Flask(__name__, instance_path=instance_path)
     app.config.from_object("config")
 
-    logging.debug(": setting config")
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     if config_overrides is not None:
         app.config.from_mapping(config_overrides)
@@ -55,6 +67,7 @@ def create_app(config_overrides: Dict = None):
             app.logger.warning("{} ({})".format(str(e), app.config["LOCALE"]))
 
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['DATABASE']=os.path.join(app.instance_path, 'LTS.sqlite')
 
     # route configuration for receiving information from GitHub
     def is_valid_signature(x_hub_signature, data, private_key):
@@ -108,6 +121,9 @@ def create_app(config_overrides: Dict = None):
         "/<calendar_id>/<year>/<month>/new_task", "new_task_action", new_task_action, methods=["GET"],
     )
     app.add_url_rule(
+        "/<calendar_id>/<year>/<month>/<view>/new_task", "new_view_task_action", new_view_task_action, methods=["GET"],
+    )
+    app.add_url_rule(
         "/<calendar_id>/<year>/<month>/<day>/<task_id>/", "edit_task_action", edit_task_action, methods=["GET"],
     )
     app.add_url_rule(
@@ -115,6 +131,10 @@ def create_app(config_overrides: Dict = None):
         "update_task_action",
         update_task_action,
         methods=["POST"],
+    )
+    #this is the new one which will save in sqlite db
+    app.add_url_rule(
+        "/<calendar_id>/<view>/new_task", "save_new_task_action", save_new_task_action, methods=["POST"],
     )
     app.add_url_rule(
         "/<calendar_id>/new_task", "save_task_action", save_task_action, methods=["POST"],
@@ -139,6 +159,10 @@ def create_app(config_overrides: Dict = None):
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
     app.jinja_env.filters["calendar_row"] = calendar_row
     app.jinja_env.filters["calendar_span"] = calendar_span
+    
+    from . import db
+    db.init_app(app)
+    
     return app
 
 logging.debug('creating app')

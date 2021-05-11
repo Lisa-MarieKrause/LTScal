@@ -1,19 +1,22 @@
 {
-    "tasks":{
+    "tasks": {
         "normal": {
             "2021": {
                 "4": {
                     "30": [
                         {"id": 1619800924, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "1. training", "details": "&nbsp;"},
-                        {"id": 1619800944, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "2. training", "details": "sd"}
-                    ]},
+                    {"id": 1619800944, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "2. training", "details": "sd"}]},
                 "5": {
                     "8": [
-                        {"id": 161980234, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "1. training", "details": "am 8.5."}
-                    ]
-                }
-            }
-            
-        },
-        "repetition": [{
-            "repetition_value": 0, "repetition_type": "w", "details": "every monday (all day task)", "title": "Repetitive weekly weekday", "id": 0, "color": "#B19CDA", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "w", "is_all_day": true}, {"repetition_value": 5, "repetition_type": "m", "details": "1st saturday of the month", "title": "Repetitive monthly weekday", "id": 1, "color": "#53A93F", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "w", "is_all_day": true}, {"repetition_value": 1, "repetition_type": "m", "details": "1st day of the month", "title": "Repetitive monthly monthday", "id": 2, "color": "#777777", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "m", "is_all_day": true}, {"repetition_value": 3, "repetition_type": "w", "details": "every thursday at afternoon", "title": "Repetitive weekly weekday", "id": 3, "color": "#785649", "start_time": "19:30", "end_time": "19:30", "repetition_subtype": "w", "is_all_day": false}], "hidden_repetition": {}}, "users": ["a_username"], "name": "Personal"}
+                        {"id": 161980234, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "1. training", "details": "am 8.5."}, {"id": 1620507081, "color": "#3EB34F", "start_time": "10:00", "end_time": "12:00", "is_all_day": false, "title": "\ud83c\udf54 Training 2", "details": "&nbsp;"}],
+                    "10": [
+                    {"id": 1620629866, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "Training am 10.05.", "details": "&nbsp;"}]}}},
+        "repetition": [
+            {"repetition_value": 5, "repetition_type": "m", "details": "1st saturday of the month", "title": "Repetitive monthly weekday", "id": 1, "color": "#53A93F", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "w", "is_all_day": true},
+            {"repetition_value": 1, "repetition_type": "m", "details": "1st day of the month", "title": "Repetitive monthly monthday", "id": 2, "color": "#777777", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "m", "is_all_day": true},
+            {"repetition_value": 3, "repetition_type": "w", "details": "every thursday at afternoon", "title": "Repetitive weekly weekday", "id": 3, "color": "#785649", "start_time": "19:30", "end_time": "19:30", "repetition_subtype": "w", "is_all_day": false}, {"id": 1620644396, "color": "#B19CDA", "start_time": "14:00", "end_time": "18:00", "is_all_day": false, "title": "Repetitive weekly weekday", "details": "every monday (all day task)", "repetition_type": "w", "repetition_subtype": "w", "repetition_value": 0}],
+        "hidden_repetition": {}
+        
+    },
+
+    "users": ["a_username"], "name": "Personal"}

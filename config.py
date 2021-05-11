@@ -1,5 +1,6 @@
 import flask_calendar.constants as constants
 import os
+import platform
 
 SECRET_TOKEN = os.getenv("SECRET_TOKEN")
 DEBUG = True

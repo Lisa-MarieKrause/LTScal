@@ -59,3 +59,34 @@ class GregorianCalendar:
             day = week_start + timedelta(days = i)
             dates.append(day)
         return dates
+        
+    @staticmethod
+    def day_of_the_week(day: int, month: int, year: int) -> str:
+        '''
+            return name of current week day
+        '''
+        date = datetime(year, month, day)
+        week_day = date.weekday()
+        if week_day == 0:
+                return "Mo"
+        if week_day == 1:
+                return "Di"
+        if week_day == 2:
+                return "Mi"
+        if week_day == 3:
+                return "Do"
+        if week_day == 4:
+                return "Fr"
+        if week_day == 5:
+                return "Sa"
+        if week_day == 6:
+                return "So"
+        
+        
+        
+    @staticmethod
+    def day_date(day: int, month: int, year: int) -> datetime.date:
+        '''
+            return date
+        '''
+        return datetime(year, month, day)
