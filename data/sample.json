@@ -9,7 +9,7 @@
                 "5": {
                     "8": [
                         {"id": 161980234, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "1. training", "details": "am 8.5."}, {"id": 1620507081, "color": "#3EB34F", "start_time": "10:00", "end_time": "12:00", "is_all_day": false, "title": "\ud83c\udf54 Training 2", "details": "&nbsp;"}],
-                    "10": [
+                    "12": [
                     {"id": 1620629866, "color": "#3EB34F", "start_time": "10:00", "end_time": "11:00", "is_all_day": false, "title": "Training am 10.05.", "details": "&nbsp;"}]}}},
         "repetition": [
             {"repetition_value": 5, "repetition_type": "m", "details": "1st saturday of the month", "title": "Repetitive monthly weekday", "id": 1, "color": "#53A93F", "start_time": "00:00", "end_time": "00:00", "repetition_subtype": "w", "is_all_day": true},
