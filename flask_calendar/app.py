@@ -156,6 +156,7 @@ def create_app(config_overrides: Dict = None):
     )
     
     # setting jinja filters for in-html-usage
+    app.jinja_env.add_extension('jinja2.ext.do')
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
     app.jinja_env.filters["calendar_row"] = calendar_row
     app.jinja_env.filters["calendar_span"] = calendar_span

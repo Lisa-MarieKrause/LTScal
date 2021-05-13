@@ -5,7 +5,7 @@ if platform.system() == 'Linux':
 else:
         logging.basicConfig(filename='/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal-pythonanywhere.log',level=logging.DEBUG)
 import re
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from typing import List, Optional, Tuple, cast  # noqa: F401
 
 from flask import abort, current_app, g, jsonify, make_response, redirect, render_template, request
@@ -173,6 +173,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         abort(404)
 
     tasks = calendar_data.tasks_from_calendar(year, month, data)
+    logging.debug(tasks)
     tasks = calendar_data.add_repetitive_tasks_from_calendar(year, month, data, tasks)
 
     if not view_past_tasks:
@@ -188,9 +189,29 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days=GregorianCalendar.week_dates(year, month, current_day)
         days.insert(0,"")
         days.insert(0,"")
+        '''
+        db = get_db()
+        cur = db.execute(
+            'SELECT * FROM schedule WHERE date IN {};'.format(tuple([day.strftime('%Y-%m-%d') for day in days]))
+        )
+        tasks = cur.fetchall()
+        cur.close()
+        '''
     if view == "day":
         weekdays_headers = GregorianCalendar.day_of_the_week(current_day, current_month, current_year)
         days = [GregorianCalendar.day_date(current_day, current_month, current_year)]
+        db = get_db()
+        cur = db.execute(
+            'SELECT *, ((end_time - start_time)*2) AS duration FROM schedule WHERE date IN ("{}");'.format(days[0].strftime('%Y-%m-%d'))
+        ) #*2 because of half hours intervals
+        rows = cur.fetchall()
+        tasks = [dict(row) for row in rows]
+        logging.debug(tasks)
+        for task in tasks:
+            logging.debug(task["start_time"])
+        #for row in rows:
+         #   tasks.append(row)
+        cur.close()
     else:
         days=GregorianCalendar.month_days(year, month)
     
@@ -393,6 +414,7 @@ def update_task_action(calendar_id: str, year: str, month: str, day: str, task_i
     repetition_type = request.form.get("repetition_type", "")
     repetition_subtype = request.form.get("repetition_subtype", "")
     repetition_value = int(request.form["repetition_value"])  # type: int
+    
 
     calendar_data.create_task(
         calendar_id=calendar_id,
@@ -436,7 +458,10 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     start_time = request.form['start_time']
     end_time = request.form['end_time']
     repetition_id = request.form.get('repeats', 0)
-    court_count = request.form['court_count']
+    TC1 = request.form.get('TC1', 0)
+    TC2 = request.form.get('TC2', 0)
+    TC3 = request.form.get('TC3', 0)
+    TC4 = request.form.get('TC4', 0)
     coach = request.form.get('coach', "")
     max_participants = request.form.get('max_participants')
     act_participants = request.form.get('act_participants')
@@ -455,9 +480,9 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     
     db = get_db()
     db.execute(
-        'INSERT INTO schedule (date, start_time, end_time, repetition_id, court_count, name, coach, max_participants, act_participants, details, color)'
-        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        (date, start_time, end_time, repetition_id, court_count, name, coach, max_participants, act_participants, details, color)
+        'INSERT INTO schedule (date, start_time, end_time, repetition_id, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, details, color)'
+        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (date, start_time, end_time, repetition_id, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, details, color)
     )
     db.commit()
     return redirect("{}/{}/{}?y={}&m={}".format(current_app.config["BASE_URL"], calendar_id, view, year, month))
