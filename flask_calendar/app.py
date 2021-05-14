@@ -39,15 +39,16 @@ from flask_calendar.app_utils import (
     calendar_span
 )
 
+def instance_def():
+    if platform.system() == 'Linux':
+        return "/home/Lii544/Projects/LTScal/instance"
+    else:
+        return "/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal/instance"
 
 def create_app(config_overrides: Dict = None):
     logging.debug(": function create_app running...")
     
-    app = flask.Flask(__name__, instance_path = (
-        if platform.system() == 'Linux':
-            instace_path="/home/Lii544/Projects/LTScal/instance"
-        else:
-            instance_path="/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal/instance"))
+    app = flask.Flask(__name__, instance_path = instance_def())
             
     app.config.from_object("config")
 
