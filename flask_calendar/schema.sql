@@ -7,7 +7,8 @@ CREATE TABLE schedule (
   date DATETIME NOT NULL,
   start_time DATETIME NOT NULL,
   end_time DATETIME NOT NULL,
-  repetition_id INTEGER,
+  repetition_id TEXT,
+  repetition_end_date DATETIME,
   TC1 BOOLEAN,
   TC2 BOOLEAN,
   TC3 BOOLEAN,
@@ -16,6 +17,7 @@ CREATE TABLE schedule (
   coach TEXT,
   max_participants INTEGER,
   act_participants INTEGER,
+  price DECIMAL,
   details TEXT,
   color TEXT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

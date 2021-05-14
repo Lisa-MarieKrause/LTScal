@@ -457,7 +457,6 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     date = request.form['date']
     start_time = request.form['start_time']
     end_time = request.form['end_time']
-    repetition_id = request.form.get('repeats', 0)
     TC1 = request.form.get('TC1', 0)
     TC2 = request.form.get('TC2', 0)
     TC3 = request.form.get('TC3', 0)
@@ -465,9 +464,18 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     coach = request.form.get('coach', "")
     max_participants = request.form.get('max_participants')
     act_participants = request.form.get('act_participants')
+    price = request.form.get('price')
     details = request.form["details"].replace("\r", "").replace("\n", "<br>")
     color = request.form['color']
     
+    repetition_id = request.form.get("repeats", "")
+    week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    for weekday in week:
+        repetition_id += str(request.form.get(weekday, ""))
+    if repetition_id != "0":
+        enddate = request.form.get('repetition_end_date', date)
+    
+    # create repetion entries
     if len(date) > 0:
         date_fragments = re.split("-", date)
         year = int(date_fragments[0])  # type: Optional[int]
@@ -475,16 +483,29 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
         day = int(date_fragments[2])  # type: Optional[int]
     else:
         year = month = day = None
+    dt_date = datetime(year, month, day)
+    if enddate:
+        dt_enddate = datetime.strptime(enddate, "%Y-%m-%d")
+    dates_to_create = [dt_date]
+    for rep_day in range(1,8):
+        if str(rep_day) in repetition_id:
+            rest = (7 % rep_day) - (7 % (dt_date.weekday()+1)) #
+            i = 1
+            next_date = dt_date + timedelta(days=((i*7) + rest))
+            while next_date <= dt_enddate:
+                dates_to_create.append(next_date)
+                i += 1
+                next_date = dt_date + timedelta(days=((i*7) + rest))
+    dates_to_create = [datetime.strftime(dat, "%Y-%m-%d") for dat in dates_to_create]
     
-    # TODO: create repetion entries
-    
-    db = get_db()
-    db.execute(
-        'INSERT INTO schedule (date, start_time, end_time, repetition_id, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, details, color)'
-        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        (date, start_time, end_time, repetition_id, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, details, color)
-    )
-    db.commit()
+    for dat in dates_to_create:
+        db = get_db()
+        db.execute(
+            'INSERT INTO schedule (date, start_time, end_time, repetition_id, repetition_end_date, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)'
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            (dat, start_time, end_time, repetition_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)
+        )
+        db.commit()
     return redirect("{}/{}/{}?y={}&m={}".format(current_app.config["BASE_URL"], calendar_id, view, year, month))
 
 #@authenticated
@@ -575,6 +596,17 @@ def delete_task_action(calendar_id: str, year: str, month: str, day: str, task_i
 
     return cast(Response, jsonify({}))
 
+def delete_new_task_action(calendar_id: str, view: str, year: str, month: str, day: str, task_id: str) -> Response:
+    '''
+        delete task from DB
+    '''
+    db = get_db()
+    db.execute(
+        'DELETE FROM schedule WHERE id = {}'.format(int(task_id))
+        )
+    db.commit()
+
+    return cast(Response, jsonify({}))
 
 @authenticated
 @authorized
