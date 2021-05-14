@@ -1,0 +1,20 @@
+<div class="accordion-hidden">
+    {{ task["details"] }}
+        <a href="#"
+            data-id="{{ task["id"] }}"
+            data-year="{{ day.year }}"
+            data-month="{{ day.month }}"
+            data-day="{{ day.day }}"
+            data-title="{{ task["name"] }}"
+            data-view="{{ view }}"
+            class="button smaller remove-task"
+            title="Remove task">x
+        </a>
+        <a href="/{{ calendar_id }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
+            class="button smaller edit-task"
+            title="Edit task">E
+        </a>
+    {% if task["repetition_id"] != "0" %}
+        <span class="button smaller recurrent-task" title="Recurent task">R</span>
+    {% endif %}
+  </div>

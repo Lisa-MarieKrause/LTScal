@@ -129,6 +129,24 @@
         }
     };
 
+    function DeleteTask_new(view, year, month, day, id, title) {
+        if (confirm("Training '" + title + "' löschen?") == true) {
+            ShowStatusbar();
+            fetch("{{ base_url }}/{{ calendar_id }}/" + view + "/" + year + "/" + month + "/" + day + "/" + id + "/",
+              {
+                method: "delete",
+                credentials: "include"
+              })
+            .then(response => {
+                if (response.status == 200) {
+                    location.reload();
+                } else {
+                    SetErrorStatusbar();
+                }
+            });
+        }
+    };
+
     function DeleteTaskOcurrence(year, month, day, id, title) {
         if (confirm("Hide task ocurrence of '" + title + "'?") == true) {
             ShowStatusbar();

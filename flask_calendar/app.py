@@ -31,7 +31,8 @@ from flask_calendar.actions import (
     update_task_day_action,
     calendar_view_action,
     new_view_task_action,
-    save_new_task_action
+    save_new_task_action,
+    delete_new_task_action
 )
 from flask_calendar.app_utils import (
     task_details_for_markup,
@@ -140,6 +141,10 @@ def create_app(config_overrides: Dict = None):
     app.add_url_rule(
         "/<calendar_id>/new_task", "save_task_action", save_task_action, methods=["POST"],
     )
+    app.add_url_rule(
+        "/<calendar_id>/<view>/<year>/<month>/<day>/<task_id>/", "delete_new_task_action", delete_new_task_action, methods=["DELETE"],
+    )
+    
     app.add_url_rule(
         "/<calendar_id>/<year>/<month>/<day>/<task_id>/", "delete_task_action", delete_task_action, methods=["DELETE"],
     )
