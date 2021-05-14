@@ -39,15 +39,15 @@ from flask_calendar.app_utils import (
     calendar_span
 )
 
-
-# define instance path (containing sqlite DB) relative to operating system
-if platform.system() == 'Linux':
-    instace_path="/home/Lii544/Projects/LTScal/instance"
-else:
-    instance_path="/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal/instance"
-
 def create_app(config_overrides: Dict = None):
+
     logging.debug(": function create_app running...")
+    # define instance path (containing sqlite DB) relative to operating system
+    if platform.system() == 'Linux':
+        instace_path="/home/Lii544/Projects/LTScal/instance"
+    else:
+        instance_path="/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal/instance"
+    
     app = flask.Flask(__name__, instance_path=instance_path)
     app.config.from_object("config")
 
