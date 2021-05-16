@@ -219,7 +219,8 @@
                 clicksCounter = 0;
                 var newTaskDay = eventData.target.parentNode.getAttribute("data-day");
                 var start = eventData.target.getAttribute("data-hour");
-                window.location = "/{{ calendar_id }}/{{ year }}/{{ month }}/{{ view }}/new_task?day=" + newTaskDay + "&start=" + start;
+                var court = eventData.target.getAttribute("data-courtNo");
+                window.location = "/{{ calendar_id }}/{{ year }}/{{ month }}/{{ view }}/new_task?day=" + newTaskDay + "&start=" + start + "&court=" + court;
             }
             return;
         }

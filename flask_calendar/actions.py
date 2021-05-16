@@ -7,6 +7,7 @@ else:
 import re
 from datetime import datetime, date, timedelta
 from typing import List, Optional, Tuple, cast  # noqa: F401
+from time import sleep
 
 from flask import abort, current_app, g, jsonify, make_response, redirect, render_template, request
 from werkzeug.wrappers import Response
@@ -256,17 +257,30 @@ def new_view_task_action(calendar_id: str, year: int, month: int, view: str) -> 
         day = 1
     day = int(request.args.get("day", day))
     start = request.args.get("start", "10:00", type=str)
+    court = int(request.args.get("court", ""))
+    TC1, TC2, TC3, TC4 = [0, 0, 0, 0]
+    if court == 1:
+        TC1 = 1
+    if court == 2:
+        TC2 = 1
+    if court == 3:
+        TC3 = 1
+    if court == 4:
+        TC4 = 1
     task = {
         "date": CalendarData.date_for_frontend(year, month, day),
         "start_time": start,
         "end_time": current_app.config["DAY_END"], #TODO: maybe start_time + 1hrs
-        "repetition_id": 0,
-        "court_count": 1,
+        "repetition_id": "0",
         "name": "",
         "coach": "",
         "max_participants": "",
         "act_participants": "",
-        "color": ""
+        "color": "",
+        "TC1": TC1,
+        "TC2": TC2,
+        "TC3": TC3,
+        "TC4": TC4
     }
     
     emojis_enabled = current_app.config.get("EMOJIS_ENABLED", False)
@@ -451,7 +465,7 @@ def update_task_action(calendar_id: str, year: str, month: str, day: str, task_i
 
 def save_new_task_action(calendar_id: str, view: str) -> Response:
     '''
-        TODO: hier connection to sqlite aufbauen und mit request form befüllen
+        TODO: teilnehmer und lessons table verarbeiten
     '''
     name = request.form['title']
     date = request.form['date']
@@ -464,16 +478,25 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     coach = request.form.get('coach', "")
     max_participants = request.form.get('max_participants')
     act_participants = request.form.get('act_participants')
+    participants_string = request.form.get('email', '')
+    if participants_string != '':
+        participants_list = participants_string.split(",")
+    else:
+        participants_list = []
+    
+    
     price = request.form.get('price')
     details = request.form["details"].replace("\r", "").replace("\n", "<br>")
     color = request.form['color']
     
-    repetition_id = request.form.get("repeats", "")
+    repetition_id = request.form.get("repeats", "0")
     week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
     for weekday in week:
         repetition_id += str(request.form.get(weekday, ""))
     if repetition_id != "0":
         enddate = request.form.get('repetition_end_date', date)
+    else:
+        enddate = ""
     
     # create repetion entries
     if len(date) > 0:
@@ -484,7 +507,7 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     else:
         year = month = day = None
     dt_date = datetime(year, month, day)
-    if enddate:
+    if repetition_id != "0":
         dt_enddate = datetime.strptime(enddate, "%Y-%m-%d")
     dates_to_create = [dt_date]
     for rep_day in range(1,8):
@@ -502,10 +525,25 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
         db = get_db()
         db.execute(
             'INSERT INTO schedule (date, start_time, end_time, repetition_id, repetition_end_date, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)'
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
             (dat, start_time, end_time, repetition_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)
         )
         db.commit()
+        sleep(0.5)
+        cur = db.execute('SELECT MAX(id) AS schedule_id FROM schedule;')
+        schedule_id = cur.fetchone()[0]
+        if len(participants_list) != 0:
+            for participant in participants_list:
+                cur = db.execute('SELECT id FROM member WHERE (email_address1 = "{}") OR (email_address2 = "{}");'.format(str(participant), str(participant)))
+                participant_id = cur.fetchone()
+                if participant_id is None:
+                    db.execute('INSERT INTO member (email_address1) VALUES ("{}") ;'.format(str(participant)))
+                    db.commit()
+                    cur = db.execute('SELECT id FROM member WHERE (email_address1 = "{}");'.format(str(participant)))
+                    participant_id = cur.fetchone()
+                    logging.debug("ids: ", participant_id, schedule_id)
+                db.execute('INSERT INTO lesson (schedule_id, participant_id) VALUES ({}, {});'.format(int(schedule_id), int(participant_id[0])))
+                db.commit()
     return redirect("{}/{}/{}?y={}&m={}".format(current_app.config["BASE_URL"], calendar_id, view, year, month))
 
 #@authenticated
