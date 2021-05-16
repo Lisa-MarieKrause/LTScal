@@ -16,10 +16,10 @@
 <body>
 
     {% if editing %}
-        <form autocomplete="off" method="POST"
+        <form autocomplete="off" method="POST" onsubmit="return validate();"
             action="{{ base_url }}/{{ calendar_id }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task.get("id") }}">
     {% else %}
-        <form autocomplete="off" method="POST" action="{{ base_url }}/{{ calendar_id }}/{{ view }}/new_task">
+        <form autocomplete="off" method="POST" onsubmit="return validate();" action="{{ base_url }}/{{ calendar_id }}/{{ view }}/new_task">
     {% endif %}
     <div id="task-details-form" class="task-details-form">
 
@@ -43,29 +43,29 @@
         </div>
         
         <label for="court1">TC1</label>
-        <input type="checkbox" id="TC1" name="TC1" value="{{ task.get("TC1", 1) }}"
+        <input type="checkbox" id="TC1" name="TC1" value="{{ task.get("TC1", 0) }}"
         {% if task["TC1"] == 1%}
             checked="checked"
         {% endif %}/>
         <label for="court2">TC2</label>
-        <input type="checkbox" id="TC2" name="TC2" value="{{ task.get("TC2", 1) }}"
+        <input type="checkbox" id="TC2" name="TC2" value="{{ task.get("TC2", 0) }}"
         {% if task["TC2"] == 1 %}
             checked="checked"
         {% endif %}/>
         <label for="court3">TC3</label>
-        <input type="checkbox" id="TC3" name="TC3" value="{{ task.get("TC3", 1) }}"
+        <input type="checkbox" id="TC3" name="TC3" value="{{ task.get("TC3", 0) }}"
         {% if task["TC3"] == 1 %}
             checked="checked"
         {% endif %}/>
         <label for="court4">TC4</label>
-        <input type="checkbox" id="TC4" name="TC4" value="{{ task.get("TC4", 1) }}"
+        <input type="checkbox" id="TC4" name="TC4" value="{{ task.get("TC4", 0) }}"
         {% if task["TC4"] == 1 %}
             checked="checked"
         {% endif %}/>
         <br/>
 
         <label for="repeats">Wiederholend</label>
-        <input type="checkbox" id="repeats" name="repeats" value="{{ task.get("repetition_id", "0") }}"
+        <input type="checkbox" id="repeats" name="repeats" value="{{ task["repetition_id"] }}"
             {% if task["repetition_id"] != "0" %}
                 checked="checked"
             {% endif %}
@@ -95,18 +95,22 @@
         </div>
         
         <label for="text">Trainer</label>
-        <input type="text" autocomplete="off" tabindex="0" placeholder="" value="{{ task.get("coach", "") }}"
-            id="coach" name="coach" minlength="2"/>
+        <input type="email" autocomplete="off" tabindex="0" placeholder="trainer@leipziger-tennisschule.de" value="{{ task.get("coach", "") }}"
+            id="coach" name="coach" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" multiple/>
         <br/>
         
         <label for="max_participants">Max. Teilnehmer</label>
-        <input type="int" tabindex="0" placeholder="" value="{{ task.get("max_participants", "") }}"
+        <input type="int" tabindex="0" placeholder="" value="{{ task.get("max_participants", 0) }}"
             id="max_participants" name="max_participants"/>
         <br/>
         
         <label for="act_participants">Aktuelle Teilnehmeranzahl</label>
-        <input type="int" tabindex="0" placeholder="" value="{{ task.get("act_participants", "") }}"
+        <input type="int" tabindex="0" placeholder="" value="{{ task.get("act_participants", 0) }}"
             id="act_participants" name="act_participants"/>
+        <div id="participants_block" class="hidden">
+            <label for="email">Teilnehmer E-Mail Adressen:</label>
+            <input type="email" name="email" id="email" multiple="true"/>
+        </div>
         <br/>
         
         <label for="price">Preis in €</label>
@@ -147,6 +151,7 @@
     </form>
 
 <script type="text/javascript">
+    
     const editing = {% if editing %}true{% else %}false{% endif %};
     const currentRepetitionValue = {{ task.get("repetition_id", "0") }};
 
@@ -197,7 +202,6 @@
             }
         };
 
-
         document.getElementById("date_picker").onchange = function(eventData) {
             document.getElementById("date").value = eventData.target.value;
         };
@@ -210,6 +214,49 @@
 
         document.getElementById("color_custom").onchange = function(eventData) {
             document.getElementById("color").value = eventData.target.value;
+        };
+
+        document.getElementById("TC1").onclick = function(eventData) {
+            console.log("Value TC1: "+ document.getElementById("TC1").value + "," + eventData.target.checked);
+            if (eventData.target.checked === true) {
+                document.getElementById("TC1").value = 1
+            }else{
+                document.getElementById("TC1").value = 0
+            };
+            console.log("Value TC1: "+ document.getElementById("TC1").value);
+        };
+
+        document.getElementById("TC2").onclick = function(eventData) {
+            console.log("Value TC2: "+ document.getElementById("TC2").value);
+             if (eventData.target.checked === true) {
+                 eventData.target.value = 1;
+             }else{eventData.target.value = 0; }
+             console.log("Value TC2: "+ document.getElementById("TC2").value);
+        };
+
+        document.getElementById("TC3").onclick = function(eventData) {
+            if (eventData.target.checked === true) {
+                eventData.target.value = 1;
+            }else{eventData.target.value = 0; }
+        };
+
+        document.getElementById("TC4").onclick = function(eventData) {
+            if (eventData.target.checked === true) {
+                eventData.target.value = 1;
+            }else{eventData.target.value = 0; }
+        };
+
+        document.getElementById("act_participants").onchange = function(eventData) {
+            document.getElementById("participants_block").className = "";
+            if (eventData.target.value == 0 ){
+                document.getElementById("participants_block").className = "hidden";
+            }
+        };
+
+        document.getElementById("email").onchange = function(eventData) {
+          console.log(document.getElementById("email").value);
+          document.getElementById("email").value = eventData.target.value;
+          console.log(document.getElementById("email").value);
         };
 
         document.getElementById("colors-and-emojis").onclick = function(eventData) {
@@ -244,6 +291,17 @@
                         window.location = "{{ base_url }}/{{ calendar_id }}/?y={{ year }}&m={{ month }}";
                     }
                 });
+            }
+        };
+
+        function validate() {
+            var court_count = document.getElementById("TC1").value + document.getElementById("TC2").value + document.getElementById("TC3").value + document.getElementById("TC4").value;
+            if ( court_count == 0 ){
+                alert("Bitte einen freien Platz wählen.");
+                document.getElementById("TC1").focus();
+                return false;
+            }else {
+                return true;
             }
         };
     
