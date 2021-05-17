@@ -3,8 +3,11 @@ import uuid
 from functools import wraps
 from typing import Any, Callable
 import logging
-logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
-logging.debug(' Loaded logging module in app_utils')
+import platform
+if platform.system() == 'Linux':
+    logging.basicConfig(filename='/home/Lii544/Projects/LTScal-pythonanywhere.log',level=logging.DEBUG)
+else:
+        logging.basicConfig(filename='/Users/lisa-mariekrause/Documents/01_Karriere/05_Bootcamps/01_Pipeline_Academy/Project/LTScal-pythonanywhere.log',level=logging.DEBUG)
 from cachelib.simple import SimpleCache
 from flask import abort, current_app, redirect, request
 from flask_calendar.authorization import Authorization
@@ -12,6 +15,7 @@ from flask_calendar.calendar_data import CalendarData
 from flask_calendar.constants import SESSION_ID
 from flask_calendar.gregorian_calendar import GregorianCalendar
 from datetime import datetime, timedelta
+from flask_calendar.db import get_db
 
 cache = SimpleCache()
 
@@ -85,6 +89,25 @@ def get_session_username(session_id: str) -> str:
 def task_details_for_markup(details: str) -> str:
     if not current_app.config["AUTO_DECORATE_TASK_DETAILS_HYPERLINK"]:
         return details
+        
+def training_participants(schedule_id: int) -> str:
+    '''
+        return string of participants, seperated by comma
+    '''
+    db = get_db()
+    logging.debug("schedule_id: ", schedule_id)
+    cur = db.execute(
+        'SELECT email_address1'
+        ' FROM lesson LEFT JOIN member ON lesson.participant_id = member.id'
+        ' WHERE schedule_id = {};'.format(int(schedule_id))
+    )
+    rows = cur.fetchall()
+    players = ""
+    for row in rows:
+        players += (row[0] + ",")
+        logging.debug("row: ", row[0])
+    logging.debug("players: ", players[:-1])
+    return players[:-1]
         
 def calendar_row(start_time: str) -> int:
     '''

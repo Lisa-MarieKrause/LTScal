@@ -37,7 +37,8 @@ from flask_calendar.actions import (
 from flask_calendar.app_utils import (
     task_details_for_markup,
     calendar_row,
-    calendar_span
+    calendar_span,
+    training_participants
 )
 
 def instance_def():
@@ -149,7 +150,7 @@ def create_app(config_overrides: Dict = None):
         "/<calendar_id>/new_task", "save_task_action", save_task_action, methods=["POST"],
     )
     app.add_url_rule(
-        "/<calendar_id>/<view>/<year>/<month>/<day>/<task_id>/", "delete_new_task_action", delete_new_task_action, methods=["DELETE"],
+        "/<calendar_id>/<view>/<year>/<month>/<day>/<schedule_id>/", "delete_new_task_action", delete_new_task_action, methods=["DELETE"],
     )
     
     app.add_url_rule(
@@ -171,6 +172,7 @@ def create_app(config_overrides: Dict = None):
     # setting jinja filters for in-html-usage
     app.jinja_env.add_extension('jinja2.ext.do')
     app.jinja_env.filters["task_details_for_markup"] = task_details_for_markup
+    app.jinja_env.filters["training_participants"] = training_participants
     app.jinja_env.filters["calendar_row"] = calendar_row
     app.jinja_env.filters["calendar_span"] = calendar_span
     

@@ -129,13 +129,21 @@
         }
     };
 
-    function DeleteTask_new(view, year, month, day, id, title) {
-        if (confirm("Training '" + title + "' löschen?") == true) {
+    function DeleteTask_new(view, year, month, day, id, title, object, players, reason, reason_txt) {
+        //var players_string = JSON.stringify(players);
+        var formData = new FormData();
+        formData.append('delObject', object);
+        formData.append('delReason', reason);
+        formData.append('delPlayers', players);
+        formData.append('delReason_txt', reason_txt);
+        console.log("players: " + players);
+        if (confirm("Training '" + title + "' entsprechend absagen?") == true) {
             ShowStatusbar();
             fetch("{{ base_url }}/{{ calendar_id }}/" + view + "/" + year + "/" + month + "/" + day + "/" + id + "/",
               {
                 method: "delete",
-                credentials: "include"
+                credentials: "include",
+                body: formData
               })
             .then(response => {
                 if (response.status == 200) {

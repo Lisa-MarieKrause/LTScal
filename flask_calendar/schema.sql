@@ -8,6 +8,7 @@ CREATE TABLE schedule (
   start_time DATETIME NOT NULL,
   end_time DATETIME NOT NULL,
   repetition_id TEXT,
+  series_id INTEGER,
   repetition_end_date DATETIME,
   TC1 BOOLEAN,
   TC2 BOOLEAN,
@@ -20,13 +21,14 @@ CREATE TABLE schedule (
   price DECIMAL,
   details TEXT,
   color TEXT,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME,
+  cancelled_at DATETIME
 );
 
 CREATE TABLE member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  lastname_kid TEXT,
-  surname_kid TEXT,
+  lastname TEXT,
+  surname TEXT,
   lastname_parent TEXT,
   surname_parent TEXT,
   gender TEXT,
@@ -39,7 +41,8 @@ CREATE TABLE member (
   email_address1 TEXT,
   email_address2 TEXT,
   active BOOLEAN,
-  notes TEXT
+  notes TEXT,
+  entered_at DATETIME
 );
 
 CREATE TABLE lesson (
@@ -48,6 +51,7 @@ CREATE TABLE lesson (
   participant_id INTEGER NOT NULL,
   cancelled_at DATETIME,
   cancellation_id INTEGER,
+  cancellation_text TEXT,
   FOREIGN KEY (schedule_id) REFERENCES schedule (id),
   FOREIGN KEY (participant_id) REFERENCES member (id)
 );
