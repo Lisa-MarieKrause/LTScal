@@ -8,7 +8,7 @@ import re
 from datetime import datetime, date, timedelta
 from typing import List, Optional, Tuple, cast  # noqa: F401
 from time import sleep
-
+import json
 from flask import abort, current_app, g, jsonify, make_response, redirect, render_template, request
 from werkzeug.wrappers import Response
 
@@ -203,7 +203,8 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days = [GregorianCalendar.day_date(current_day, current_month, current_year)]
         db = get_db()
         cur = db.execute(
-            'SELECT *, ((end_time - start_time)*2) AS duration FROM schedule WHERE date IN ("{}");'.format(days[0].strftime('%Y-%m-%d'))
+            'SELECT *, ((end_time - start_time)*2) AS duration FROM schedule'
+            ' WHERE date IN ("{}") AND cancelled_at is null;'.format(days[0].strftime('%Y-%m-%d'))
         ) #*2 because of half hours intervals
         rows = cur.fetchall()
         tasks = [dict(row) for row in rows]
@@ -467,6 +468,7 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
     '''
         TODO: teilnehmer und lessons table verarbeiten
     '''
+    created_at = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     name = request.form['title']
     date = request.form['date']
     start_time = request.form['start_time']
@@ -495,8 +497,18 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
         repetition_id += str(request.form.get(weekday, ""))
     if repetition_id != "0":
         enddate = request.form.get('repetition_end_date', date)
+        db = get_db()
+        cur = db.execute(
+        'SELECT MAX(series_id) FROM schedule;'
+        )
+        series_id = cur.fetchone()[0]
+        if series_id is None:
+            series_id = 1
+        else:
+            series_id += 1
     else:
         enddate = ""
+        series_id = None
     
     # create repetion entries
     if len(date) > 0:
@@ -520,13 +532,12 @@ def save_new_task_action(calendar_id: str, view: str) -> Response:
                 i += 1
                 next_date = dt_date + timedelta(days=((i*7) + rest))
     dates_to_create = [datetime.strftime(dat, "%Y-%m-%d") for dat in dates_to_create]
-    
     for dat in dates_to_create:
         db = get_db()
         db.execute(
-            'INSERT INTO schedule (date, start_time, end_time, repetition_id, repetition_end_date, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)'
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-            (dat, start_time, end_time, repetition_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color)
+            'INSERT INTO schedule (date, start_time, end_time, repetition_id, series_id, repetition_end_date, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at)'
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+            (dat, start_time, end_time, repetition_id, series_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at)
         )
         db.commit()
         sleep(0.5)
@@ -634,16 +645,55 @@ def delete_task_action(calendar_id: str, year: str, month: str, day: str, task_i
 
     return cast(Response, jsonify({}))
 
-def delete_new_task_action(calendar_id: str, view: str, year: str, month: str, day: str, task_id: str) -> Response:
+def delete_new_task_action(calendar_id: str, view: str, year: str, month: str, day: str, schedule_id: str) -> Response:
     '''
         delete task from DB
     '''
-    db = get_db()
-    db.execute(
-        'DELETE FROM schedule WHERE id = {}'.format(int(task_id))
-        )
-    db.commit()
+    delObject = request.form.get("delObject","") #str
+    delReason = request.form.get("delReason",0) #int
+    delReason_txt = request.form.get("delReason_txt","")
+    delPlayers= request.form.get("delPlayers","") #comma seperated string
+    delPlayers = delPlayers[:-1].split(",")
+    logging.debug("formdata: ", delPlayers)
 
+    db = get_db()
+    if delObject == "player":
+        for player in delPlayers:
+            cur = db.execute(
+            'SELECT id FROM member WHERE email_address1 = "{}";'.format(str(player))
+            )
+            member_id = cur.fetchone()[0]
+            logging.debug("member_id: ", member_id)
+            db.execute(
+            'UPDATE lesson SET cancellation_id = {}, cancellation_text = "{}", cancelled_at = DATETIME("now")'
+            ' WHERE schedule_id = {} AND participant_id = {};'.format(int(delReason), str(delReason_txt), int(schedule_id), int(member_id))
+            )
+            db.commit()
+    else:
+        db.execute(
+        'UPDATE lesson SET cancellation_id = {}, cancellation_text = "{}", cancelled_at = DATETIME("now")'
+        ' WHERE schedule_id = {};'.format(int(delReason), str(delReason_txt), int(schedule_id))
+        )
+        db.commit()
+    if delObject == "this":
+        db.execute(
+        'UPDATE schedule SET cancelled_at = DATETIME("now")'
+        ' WHERE id = {}'.format(int(schedule_id))
+        )
+        db.commit()
+    if delObject == "series":
+        cur = db.execute(
+        'SELECT series_id'
+        ' FROM schedule'
+        ' WHERE id = {}'.format(int(schedule_id))
+        )
+        series_id = cur.fetchone()[0]
+        db.execute(
+        ' UPDATE schedule'
+        ' SET cancelled_at = DATETIME("now")'
+        ' WHERE series_id = {};'.format(int(series_id))
+        )
+        db.commit()
     return cast(Response, jsonify({}))
 
 @authenticated

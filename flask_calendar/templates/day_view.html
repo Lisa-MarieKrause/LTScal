@@ -159,9 +159,59 @@
   
   </div>
   
+  <!-- The Deletion Modal -->
+  <div id="DeletionModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>
+          <label for="deleteObject">Was soll gelöscht werden?</label>
+          <select name="deleteObject"  id="deleteObject">
+            <option value="this">Nur dieses Training</option>
+            <option value="series">Ganze Serie</option>
+            <option value="player">Ein/e Teilnehmer/in</option>
+          </select>
+          
+          <label for="deletePlayer" style="display:None;">Welche/r Spieler/in hat abgesagt?</label>
+          <select name="deletePlayer"  id="deletePlayer" style="display:None;" multiple="true">
+                  
+          </select>
+          
+          <br>
+          <label for="deleteReason">Grund der Absage:</label>
+          <select name="deleteReason" id="deleteReason">
+                <option value="1">Trainerausfall</option>
+                <option value="2">Wetter</option>
+                <option value="3">Teilnehmerabsage</option>
+          </select>
+      </p>
+      <div class="modal-footer">
+        <button id="modalBtn" class="btn">Absagen</button>
+      </div>
+    </div>
+
+  </div>
+  <!-- End Deletion Modal -->
+  
 </div>
 
 <script>
+    
+    //Get the modal
+    var modalDel = document.getElementById("DeletionModal");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modalDel.style.display = "none";
+        var node = document.getElementById("deletePlayer");
+        while (node.firstChild) {
+            node.removeChild(node.lastChild);
+        }
+        
+        document.getElementById("deleteObject").value = "this";
+        document.getElementById("deletePlayer").style.display = "none";
+    };
     
     function deleteSpannedCells(table, event) {
         // delete cells which are spanned by a longer event
@@ -238,14 +288,76 @@
         if (eventData.target.nodeName === "A") {
             if (eventData.target.className.indexOf("remove-task") > -1) {
                 console.log("delete task");
-                DeleteTask_new(eventData.target.getAttribute("data-view"),
-                        eventData.target.getAttribute("data-year"),
-                        eventData.target.getAttribute("data-month"),
-                        eventData.target.getAttribute("data-day"),
-                        eventData.target.getAttribute("data-id"),
-                        eventData.target.getAttribute("data-title"));
+                // fill select options
+                var listcontent = eventData.target.getAttribute("data-players");
+                console.log(eventData.target.getAttribute("data-players"));
+                var list = listcontent.split(",");
+                console.log("content: " + listcontent);
+                console.log("length of list: " + list.length);
+                for (let player of list){
+                    var opt = document.createElement("option");
+                    opt.text = player;
+                    opt.value = player;
+                    //opt.setAttribute("value", player);
+                    document.getElementById("deletePlayer").appendChild(opt);
+                }
+            
+                modalDel.style.display = "block";
+                
+                var delBtn = document.getElementById("modalBtn");
+                delBtn.dataset.view = eventData.target.getAttribute("data-view");
+                delBtn.dataset.year = eventData.target.getAttribute("data-year");
+                delBtn.dataset.month = eventData.target.getAttribute("data-month");
+                delBtn.dataset.day = eventData.target.getAttribute("data-day");
+                delBtn.dataset.id = eventData.target.getAttribute("data-id");
+                delBtn.dataset.title = eventData.target.getAttribute("data-title");
             }
         }
+        
+        if (event.target == modalDel) {
+            modalDel.style.display = "none";
+            var node = document.getElementById("deletePlayer");
+            while (node.firstChild) {
+                node.removeChild(node.lastChild);
+            }
+            
+            document.getElementById("deleteObject").value = "this";
+            document.getElementById("deletePlayer").style.display = "none";
+        }
+        
+        if (event.target.id == "modalBtn") {
+            var reasons = document.getElementById("deleteReason");
+            var reason_selected = reasons.options[reasons.selectedIndex];
+            var reason_selected = reason_selected.text;
+            var player_coll = document.getElementById("deletePlayer").selectedOptions;
+            var players = ""
+            for (let i=0; i<player_coll.length; i++){
+                players += player_coll[i].value + ","
+            }
+            console.log("players: :" + players);
+            DeleteTask_new(eventData.target.getAttribute("data-view"),
+                    eventData.target.getAttribute("data-year"),
+                    eventData.target.getAttribute("data-month"),
+                    eventData.target.getAttribute("data-day"),
+                    eventData.target.getAttribute("data-id"),
+                    eventData.target.getAttribute("data-title"),
+                    document.getElementById("deleteObject").value,
+                    players,
+                    reasons.value,
+                    reason_selected)
+                    ;
+        }
+
+    };
+
+    document.getElementById("deleteObject").onchange = function(eventData) {
+      if (eventData.target.value == "player"){
+          document.getElementById("deletePlayer").style.display = "block";
+          document.getElementById("deleteReason").value = "3";
+      }else{
+          document.getElementById("deletePlayer").style.display = "none";
+          document.getElementById("deleteReason").value = "1";
+      }
     };
 
 

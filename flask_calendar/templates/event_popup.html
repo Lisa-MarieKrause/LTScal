@@ -7,8 +7,9 @@
             data-day="{{ day.day }}"
             data-title="{{ task["name"] }}"
             data-view="{{ view }}"
+            data-players="{{ task["id"]|training_participants }}"
             class="button smaller remove-task"
-            title="Remove task">x
+            title="Remove task">&times;
         </a>
         <a href="/{{ calendar_id }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
             class="button smaller edit-task"
