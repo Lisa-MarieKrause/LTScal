@@ -6,7 +6,10 @@ SECRET_TOKEN = os.getenv("SECRET_TOKEN")
 DEBUG = True
 DATA_FOLDER = "data"
 USERS_DATA_FOLDER = "users"
-BASE_URL = "http://0.0.0.0:5000" #"http://lii544.pythonanywhere.com"
+if platform.system() == 'Linux':
+    BASE_URL = "http://lii544.pythonanywhere.com"
+else:
+    BASE_URL = "http://0.0.0.0:5000"
 MIN_YEAR = 2017
 MAX_YEAR = 2200
 PASSWORD_SALT = "something random and full of non-standard characters"
