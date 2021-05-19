@@ -119,11 +119,6 @@ def create_app(config_overrides: Dict = None):
         db.init_db()
         return 'reinitialized db.', 200
         
-    def load_member():
-        from . import db
-        db.load_gspread_member()
-        return 'loaded member data from gspread.', 200
-        
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
     app.add_url_rule("/initdb", "initdb", initdb, methods=["GET"])
     app.add_url_rule("/", "index", index, methods=["GET"])
@@ -177,7 +172,6 @@ def create_app(config_overrides: Dict = None):
     
     app.add_url_rule(
         "/update_member", "update_member_action", update_member_action, methods=["POST", "GET"],)
-    app.add_url_rule("/loadmembers", "load_member", load_member, methods=["POST", "GET"],)
     
     # setting jinja filters for in-html-usage
     app.jinja_env.add_extension('jinja2.ext.do')
