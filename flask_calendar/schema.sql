@@ -29,20 +29,25 @@ CREATE TABLE member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   lastname TEXT,
   surname TEXT,
-  lastname_parent TEXT,
-  surname_parent TEXT,
+  title TEXT,
+  active_status BOOLEAN,
   gender TEXT,
   birthdate DATETIME,
+  kid_status BOOLEAN,
+  lastname_parent TEXT,
+  surname_parent TEXT,
+  title_parent TEXT,
+  greeting TEXT,
+  street TEXT,
   zip_code TEXT,
   city TEXT,
-  street TEXT,
   tel_number1 TEXT,
   tel_number2 TEXT,
   email_address1 TEXT,
   email_address2 TEXT,
-  active BOOLEAN,
   notes TEXT,
-  entered_at DATETIME
+  entered_at DATETIME,
+  updated_at DATETIME
 );
 
 CREATE TABLE lesson (

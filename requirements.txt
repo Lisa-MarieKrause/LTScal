@@ -1,3 +1,4 @@
 flask
 cachelib
 gitpython
+gspread oauth2client

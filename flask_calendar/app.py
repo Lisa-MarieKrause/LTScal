@@ -32,7 +32,8 @@ from flask_calendar.actions import (
     calendar_view_action,
     new_view_task_action,
     save_new_task_action,
-    delete_new_task_action
+    delete_new_task_action,
+    update_member_action
 )
 from flask_calendar.app_utils import (
     task_details_for_markup,
@@ -168,6 +169,9 @@ def create_app(config_overrides: Dict = None):
         hide_repetition_task_instance_action,
         methods=["POST"],
     )
+    
+    app.add_url_rule(
+        "/update_member", "update_member_action", update_member_action, methods=["POST", "GET"],)
     
     # setting jinja filters for in-html-usage
     app.jinja_env.add_extension('jinja2.ext.do')

@@ -6,6 +6,11 @@ SECRET_TOKEN = os.getenv("SECRET_TOKEN")
 DEBUG = True
 DATA_FOLDER = "data"
 USERS_DATA_FOLDER = "users"
+
+# path of gcp key json file
+GCP_KEYFILE = os.getenv("GCP_KEYFILE")
+MEMBER_DATA = 'LTS_Mitglieder' #file name of google spreadsheet (Kundenkartei)
+
 if platform.system() == 'Linux':
     BASE_URL = "http://lii544.pythonanywhere.com"
 else:
