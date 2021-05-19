@@ -753,3 +753,5 @@ def update_member_action():
     )
     db.commit()
     
+    return cast(Response, jsonify({}))
+    
