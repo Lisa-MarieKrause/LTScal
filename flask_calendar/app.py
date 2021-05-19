@@ -41,6 +41,7 @@ from flask_calendar.app_utils import (
     calendar_span,
     training_participants
 )
+from flask_calendar.db import load_gspread_member
 
 def instance_def():
     if platform.system() == 'Linux':
@@ -172,6 +173,7 @@ def create_app(config_overrides: Dict = None):
     
     app.add_url_rule(
         "/update_member", "update_member_action", update_member_action, methods=["POST", "GET"],)
+    app.add_url_rule("/loadmembers", "load_gspread_member", load_gspread_member, methods=["POST", "GET"],)
     
     # setting jinja filters for in-html-usage
     app.jinja_env.add_extension('jinja2.ext.do')
