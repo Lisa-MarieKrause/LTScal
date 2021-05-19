@@ -14,7 +14,7 @@ from flask_calendar.authorization import Authorization
 from flask_calendar.calendar_data import CalendarData
 from flask_calendar.constants import SESSION_ID
 from flask_calendar.gregorian_calendar import GregorianCalendar
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from flask_calendar.db import get_db
 
 cache = SimpleCache()
@@ -59,7 +59,42 @@ def previous_month_link(year: int, month: int) -> str:
         if year < current_app.config["MIN_YEAR"] or year > current_app.config["MAX_YEAR"]
         else "?y={}&m={}".format(year, month)
     )
+    
+def previous(year: int, month: int, day: int, view: str) -> str:
+    '''
+       return new window location depending on view
+    '''
+    if view == "month":
+        return previous_month_link(year, month)
+    if view == "week":
+        return previous_month_link(year, month)
+    if view == "day":
+        current_day, current_month, current_year = GregorianCalendar.current_date()
+        if day == current_day and month == current_month and year == current_year:
+            date = GregorianCalendar.day_date(current_day, current_month, current_year)
+        else:
+            date = datetime(year, month, day)
+        
+        next_date = date + timedelta(days=-1)
+        return "?y={}&m={}&d={}".format(next_date.year, next_date.month, next_date.day)
 
+def next(year: int, month: int, day: int, view: str) -> str:
+    '''
+       return new window location depending on view
+    '''
+    if view == "month":
+        return next_month_link(year, month)
+    if view == "week":
+        return next_month_link(year, month)
+    if view == "day":
+        current_day, current_month, current_year = GregorianCalendar.current_date()
+        if day == current_day and month == current_month and year == current_year:
+            date = GregorianCalendar.day_date(current_day, current_month, current_year)
+        else:
+            date = datetime(year, month, day)
+        
+        next_date = date + timedelta(days=1)
+        return "?y={}&m={}&d={}".format(next_date.year, next_date.month, next_date.day)
 
 def next_month_link(year: int, month: int) -> str:
     month, year = GregorianCalendar.next_month_and_year(year=year, month=month)
