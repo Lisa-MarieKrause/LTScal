@@ -16,3 +16,4 @@ pytest_cache/*
 .venv
 instance/
 keys.json
+googleSheetToPython.py
