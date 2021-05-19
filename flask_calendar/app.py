@@ -121,7 +121,7 @@ def create_app(config_overrides: Dict = None):
         
     def load_member():
         from . import db
-        db.load_gspread_member
+        db.load_gspread_member()
         return 'loaded member data from gspread.', 200
         
     app.add_url_rule("/server/update", "webhook", webhook, methods=["POST", "GET"])
