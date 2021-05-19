@@ -735,8 +735,7 @@ def update_member_action():
     '''
         receive post request from google sheets script with member data to be updated
     '''
-    return 'triggered it!', 200
-    '''
+
     id = request.form["id"]
     col = request.form["col"]
     value = request.form.get("value", "")
@@ -753,4 +752,4 @@ def update_member_action():
     ' WHERE id = {}'.format(col_name, value, updated_at, id)
     )
     db.commit()
-    '''
+    
