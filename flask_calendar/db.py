@@ -44,7 +44,7 @@ def load_gspread_member():
         db = get_db()
         db.execute(
         'INSERT INTO member (id, lastname, surname, title, active_status, gender, birthdate, kid_status, lastname_parent, surname_parent, title_parent, greeting, street, zip_code, city, tel_number1, tel_number2, email_address1, email_address2, notes, entered_at, updated_at)'
-        ' VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?);', tuple(member)
+        ' VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?);', (int(member[0]), tuple(member[1:]))
         )
         db.commit()
     click.echo("loaded member spreadsheet into database.")
