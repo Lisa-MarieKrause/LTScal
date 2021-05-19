@@ -736,8 +736,8 @@ def update_member_action():
         receive post request from google sheets script with member data to be updated
     '''
 
-    id = request.form["id"]
-    col = request.form["col"]
+    id = int(request.form["id"])
+    col = int(request.form["col"])
     value = request.form.get("value", "")
     updated_at = request.form["updated_at"]
     
