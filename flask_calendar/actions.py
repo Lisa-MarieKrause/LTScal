@@ -727,3 +727,27 @@ def hide_repetition_task_instance_action(calendar_id: str, year: str, month: str
     )
 
     return cast(Response, jsonify({}))
+
+def update_member_action():
+    '''
+        receive post request from google sheets script with member data to be updated
+    '''
+    return 'triggered it!', 200
+    '''
+    id = request.form["id"]
+    col = request.form["col"]
+    value = request.form.get("value", "")
+    updated_at = request.form["updated_at"]
+    
+    db = get_db()
+    cur = db.execute('PRAGMA table_info(member);')
+    infos = cur.fetchall() #returns cid | name | type | ... of member table's columns indexing begins at 0
+    col_name = infos[col-1][1] #get the name of the column to update
+    
+    db.execute(
+    'UPDATE member'
+    ' SET {} = "{}", updated_at = "{}" '
+    ' WHERE id = {}'.format(col_name, value, updated_at, id)
+    )
+    db.commit()
+    '''
