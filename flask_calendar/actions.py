@@ -20,6 +20,8 @@ from flask_calendar.app_utils import (
     get_session_username,
     new_session_id,
     next_month_link,
+    previous,
+    next,
     previous_month_link,
     business_hours,
 )
@@ -155,6 +157,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
     year = max(min(year, current_app.config["MAX_YEAR"]), current_app.config["MIN_YEAR"])
     month = int(request.args.get("m", current_month))
     month = max(min(month, 12), 1)
+    day = int(request.args.get("d", current_day))
     month_name = GregorianCalendar.MONTH_NAMES[month - 1]
     day_start = current_app.config["DAY_START"]
     day_end = current_app.config["DAY_END"]
@@ -199,8 +202,8 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         cur.close()
         '''
     if view == "day":
-        weekdays_headers = GregorianCalendar.day_of_the_week(current_day, current_month, current_year)
-        days = [GregorianCalendar.day_date(current_day, current_month, current_year)]
+        weekdays_headers = GregorianCalendar.day_of_the_week(day, month, year)
+        days = [GregorianCalendar.day_date(day, month, year)]
         db = get_db()
         cur = db.execute(
             'SELECT *, ((end_time - start_time)*2) AS duration FROM schedule'
@@ -229,8 +232,8 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             current_month=current_month,
             current_day=current_day,
             days=days,
-            previous_month_link=previous_month_link(year, month),
-            next_month_link=next_month_link(year, month),
+            previous=previous(year, month, day, view),
+            next_month_link=next(year, month, day, view),
             base_url=current_app.config["BASE_URL"],
             tasks=tasks,
             display_view_past_button=current_app.config["SHOW_VIEW_PAST_BUTTON"],
