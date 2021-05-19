@@ -746,12 +746,21 @@ def update_member_action():
     infos = cur.fetchall() #returns cid | name | type | ... of member table's columns indexing begins at 0
     col_name = infos[col-1][1] #get the name of the column to update
     
-    db.execute(
-    'UPDATE member'
-    ' SET {} = "{}", updated_at = "{}" '
-    ' WHERE id = {}'.format(col_name, value, updated_at, id)
-    )
-    db.commit()
+    cur = db.execute('SELECT id FROM member WHERE id = {};'.format(id))
+    result = cur.fetchone()[0]
+    if result is None:
+        db.execute(
+        'INSERT INTO member (id, col_name, updated_at)'
+        ' VALUES ({}, "{}", "{}");'.format(id, value, updated_at)
+        )
+        db.commit()
+    else:
+        db.execute(
+        'UPDATE member'
+        ' SET {} = "{}", updated_at = "{}" '
+        ' WHERE id = {};'.format(col_name, value, updated_at, id)
+        )
+        db.commit()
     
     return cast(Response, jsonify({}))
     
