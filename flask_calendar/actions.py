@@ -747,7 +747,7 @@ def update_member_action():
     col_name = infos[col-1][1] #get the name of the column to update
     
     cur = db.execute('SELECT id FROM member WHERE id = {};'.format(id))
-    result = cur.fetchone()[0]
+    result = cur.fetchone()
     if result is None:
         db.execute(
         'INSERT INTO member (id, col_name, updated_at)'
