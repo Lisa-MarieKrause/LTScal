@@ -750,8 +750,8 @@ def update_member_action():
     result = cur.fetchone()
     if result is None:
         db.execute(
-        'INSERT INTO member (id, col_name, updated_at)'
-        ' VALUES ({}, "{}", "{}");'.format(id, value, updated_at)
+        'INSERT INTO member (id, {}, updated_at)'
+        ' VALUES ({}, "{}", "{}");'.format(col_name, id, value, updated_at)
         )
         db.commit()
     else:
