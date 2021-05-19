@@ -26,7 +26,7 @@ CREATE TABLE schedule (
 );
 
 CREATE TABLE member (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER PRIMARY KEY,
   lastname TEXT,
   surname TEXT,
   title TEXT,
