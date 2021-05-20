@@ -17,7 +17,7 @@
 
     {% if editing %}
         <form autocomplete="off" method="POST"
-            action="{{ base_url }}/{{ calendar_id }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task.get("id") }}">
+            action="{{ base_url }}/{{ calendar_id }}/{{view}}/{{ year }}/{{ month }}/{{ day }}/task/{{ task.get("id") }}">
     {% else %}
         <form autocomplete="off" method="POST" action="{{ base_url }}/{{ calendar_id }}/new_task">
     {% endif %}

@@ -28,7 +28,10 @@ from flask_calendar.app_utils import (
 from flask_calendar.authentication import Authentication
 from flask_calendar.calendar_data import CalendarData
 from flask_calendar.gregorian_calendar import GregorianCalendar
-from flask_calendar.db import get_db
+from flask_calendar.db import (
+    get_db,
+    get_dict_db
+)
 
 
 def get_authentication() -> Authentication:
@@ -211,11 +214,6 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         ) #*2 because of half hours intervals
         rows = cur.fetchall()
         tasks = [dict(row) for row in rows]
-        logging.debug(tasks)
-        for task in tasks:
-            logging.debug(task["start_time"])
-        #for row in rows:
-         #   tasks.append(row)
         cur.close()
     else:
         days=GregorianCalendar.month_days(year, month)
@@ -301,6 +299,7 @@ def new_view_task_action(calendar_id: str, year: int, month: int, view: str) -> 
             max_year=current_app.config["MAX_YEAR"],
             month_names=month_names,
             task=task,
+            participants="",
             base_url=current_app.config["BASE_URL"],
             editing=False,
             emojis_enabled=emojis_enabled,
@@ -356,46 +355,68 @@ def new_task_action(calendar_id: str, year: int, month: int) -> Response:
     )
 
 
-@authenticated
-@authorized
-def edit_task_action(calendar_id: str, year: int, month: int, day: int, task_id: int) -> Response:
+#@authenticated
+#@authorized
+def edit_task_action(calendar_id: str, view: str, year: int, month: int, day: int, task_id: int) -> Response:
     month_names = GregorianCalendar.MONTH_NAMES
     calendar_data = CalendarData(current_app.config["DATA_FOLDER"], current_app.config["WEEK_STARTING_DAY"])
-
     repeats = request.args.get("repeats") == "1"
-    try:
-        if repeats:
-            task = calendar_data.repetitive_task_from_calendar(
+    participants = ""
+    
+    if view != "day":
+        try:
+            if repeats:
+                task = calendar_data.repetitive_task_from_calendar(
                 calendar_id=calendar_id, year=year, month=month, task_id=int(task_id)
-            )
-        else:
-            task = calendar_data.task_from_calendar(
+                )
+            else:
+                task = calendar_data.task_from_calendar(
                 calendar_id=calendar_id,
                 year=year,
                 month=month,
                 day=day,
                 task_id=int(task_id),
-            )
-    except (FileNotFoundError, IndexError):
-        abort(404)
+                )
+        except (FileNotFoundError, IndexError):
+            abort(404)
 
-    if task["details"] == "&nbsp;":
-        task["details"] = ""
-
+        if task["details"] == "&nbsp;":
+            task["details"] = ""
+        
+    if view == "day":
+        db = get_dict_db()
+        cur = db.execute(
+        'SELECT * FROM schedule WHERE id = {}'.format(task_id)
+        )
+        task = cur.fetchall()[0] #returned list of dictionaries
+        cur = db.execute(
+        'SELECT email_address1'
+        ' FROM lesson LEFT JOIN member ON lesson.participant_id = member.id'
+        ' WHERE lesson.schedule_id = {}'.format(task_id)
+        )
+        rows = cur.fetchall()
+        for row in rows:
+            participants += str(row["email_address1"]) + ","
+        if not rows is None:
+            participants = participants[:-1]
+            
+        cur.close()
+        
     emojis_enabled = current_app.config.get("EMOJIS_ENABLED", False)
-
     return cast(
         Response,
         render_template(
-            "task.html",
+            "new_task.html",
             calendar_id=calendar_id,
             year=year,
             month=month,
+            view=view,
             day=day,
             min_year=current_app.config["MIN_YEAR"],
             max_year=current_app.config["MAX_YEAR"],
             month_names=month_names,
             task=task,
+            participants=participants,
             base_url=current_app.config["BASE_URL"],
             editing=True,
             emojis_enabled=emojis_enabled,
@@ -410,6 +431,7 @@ def edit_task_action(calendar_id: str, year: int, month: int, day: int, task_id:
 @authorized
 def update_task_action(calendar_id: str, year: str, month: str, day: str, task_id: str) -> Response:
     # Logic is same as save + delete, could refactor but can wait until need to change any save/delete logic
+
 
     calendar_data = CalendarData(current_app.config["DATA_FOLDER"], current_app.config["WEEK_STARTING_DAY"])
 
@@ -466,10 +488,151 @@ def update_task_action(calendar_id: str, year: str, month: str, day: str, task_i
             "{}/{}/?y={}&m={}".format(current_app.config["BASE_URL"], calendar_id, updated_year, updated_month),
             code=302,
         )
+        
+def update_new_task_action(calendar_id: str, view: str, year: str, month: str, day: str, task_id: str) -> Response:
+    
+    schedule_id = int(task_id)
+    editObject = request.form['editObject']
+    created_at = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S") #=updated_at
+    name = request.form['title']
+    date = request.form['date']
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    TC1 = request.form.get('TC1', 0)
+    TC2 = request.form.get('TC2', 0)
+    TC3 = request.form.get('TC3', 0)
+    TC4 = request.form.get('TC4', 0)
+    coach = request.form.get('coach', "")
+    max_participants = int(request.form.get('max_participants', 0))
+    act_participants = int(request.form.get('act_participants', 0))
+    participants_string = request.form.get('email', '')
+    if participants_string != '':
+        participants_list = participants_string.split(",")
+    else:
+        participants_list = []
+    
+    
+    price = request.form.get('price')
+    details = request.form["details"].replace("\r", "").replace("\n", "<br>")
+    color = request.form['color']
+    
+    repetition_id = request.form.get("repeats", "0")
+    week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    for weekday in week:
+        repetition_id += str(request.form.get(weekday, ""))
+    if repetition_id != "0":
+        enddate = request.form.get('repetition_end_date', date)
+        db = get_db()
+        cur = db.execute(
+        'SELECT series_id FROM schedule WHERE id = {};'.format(schedule_id)
+        )
+        series_id = cur.fetchone()[0]
+        if series_id is None:
+            cur = db.execute(
+            'SELECT MAX(series_id) FROM schedule;'
+            )
+            series_id = cur.fetchone()[0]
+            if series_id is None:
+                series_id = 1
+            else:
+                series_id += 1
+    else:
+        enddate = ""
+        series_id = None
+    
+    # create training date
+    if len(date) > 0:
+        date_fragments = re.split("-", date)
+        year = int(date_fragments[0])  # type: Optional[int]
+        month = int(date_fragments[1])  # type: Optional[int]
+        day = int(date_fragments[2])  # type: Optional[int]
+    else:
+        year = month = day = None
+    dt_date = datetime(year, month, day)
+    if repetition_id != "0":
+        dt_enddate = datetime.strptime(enddate, "%Y-%m-%d")
+    dates_to_create = [dt_date]
+    
+    if editObject == "series":
+        #append repetition dates
+        for rep_day in range(1,8):
+            if str(rep_day) in repetition_id:
+                rest = (7 % rep_day) - (7 % (dt_date.weekday()+1)) #
+                i = 1
+                next_date = dt_date + timedelta(days=((i*7) + rest))
+                while next_date <= dt_enddate:
+                    dates_to_create.append(next_date)
+                    i += 1
+                    next_date = dt_date + timedelta(days=((i*7) + rest))
+    
+    dates_to_create = [datetime.strftime(dat, "%Y-%m-%d") for dat in dates_to_create]
+    
+    #delete trainings series because there might be major changes which make update not possible
+    #this is a huge repetition of save_task action --> maybe clean up
+    if editObject == "series":
+        db = get_db()
+        cur = db.execute(
+        'SELECT id FROM schedule WHERE series_id = {};'.format(series_id)
+        )
+        schedule_ids = cur.fetchall()
+        schedule_ids = (schedule[0] for schedule in schedule_ids) #tuple of ids
+        db.execute(
+            'DELETE FROM lesson WHERE schedule_id IN {};'.format(schedule_ids)
+            )
+        db.execute(
+            'DELETE FROM schedule WHERE series_id = {};'.format(series_id)
+        )
+        db.commit()
+        
+        #Reinserting into the DB
+        for dat in dates_to_create:
+            db.execute(
+            'INSERT INTO schedule (date, start_time, end_time, repetition_id, series_id, repetition_end_date, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at)'
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+            (dat, start_time, end_time, repetition_id, series_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at)
+            )
+            db.commit()
+            sleep(0.5)
+            cur = db.execute('SELECT MAX(id) AS schedule_id FROM schedule;')
+            schedule_id = cur.fetchone()[0]
+            if len(participants_list) != 0:
+                for participant in participants_list:
+                    cur = db.execute('SELECT id FROM member WHERE (email_address1 = "{}") OR (email_address2 = "{}");'.format(str(participant), str(participant)))
+                    participant_id = cur.fetchone()
+                    if participant_id is None:
+                        return "Member not in database", 400
+                    db.execute('INSERT INTO lesson (schedule_id, participant_id) VALUES ({}, {});'.format(int(schedule_id), int(participant_id[0])))
+                    db.commit()
+    else:
+        db = get_db()
+        #db.execute(
+        #'UPDATE schedule SET date="{}", start_time="{}", end_time="{}", repetition_id="{}", series_id={}, repetition_end_date="{}", TC1="{}", TC2="{}", TC3="{}", TC4="{}", name="{}", coach="{}", max_participants={}, act_participants={}, price={}, details="{}", color="{}", created_at="{}" WHERE id = {};'.format(dates_to_create[0], start_time, end_time, repetition_id, series_id, enddate, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at, schedule_id)
+        #)
+        db.execute(
+        'UPDATE schedule SET date="{}", start_time="{}", end_time="{}", TC1="{}", TC2="{}", TC3="{}", TC4="{}", name="{}", coach="{}", max_participants={}, act_participants={}, price={}, details="{}", color="{}", created_at="{}"'
+        ' WHERE id = {};'.format(dates_to_create[0], start_time, end_time, TC1, TC2, TC3, TC4, name, coach, max_participants, act_participants, price, details, color, created_at, schedule_id)
+        )
+        db.execute(
+        'DELETE FROM lesson WHERE schedule_id = {};'.format(schedule_id)
+        )
+        db.commit()
+        if len(participants_list) != 0:
+            for participant in participants_list:
+                cur = db.execute('SELECT id FROM member WHERE (email_address1 = "{}") OR (email_address2 = "{}");'.format(str(participant), str(participant)))
+                participant_id = cur.fetchone()
+                if participant_id is None:
+                    return "Member not in database", 400
+                db.execute('INSERT INTO lesson (schedule_id, participant_id) VALUES ({}, {});'.format(int(schedule_id), int(participant_id[0])))
+                db.commit()
+    
+    return redirect(
+        "{}/{}/{}?y={}&m={}&d={}".format(current_app.config["BASE_URL"], calendar_id, view, year, month, day),
+        code=302,
+    )
 
 def save_new_task_action(calendar_id: str, view: str) -> Response:
     '''
-        TODO: teilnehmer und lessons table verarbeiten
+        TODO:
     '''
     created_at = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     name = request.form['title']

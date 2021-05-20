@@ -17,7 +17,7 @@
 
     {% if editing %}
         <form autocomplete="off" method="POST" onsubmit="return validate();"
-            action="{{ base_url }}/{{ calendar_id }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task.get("id") }}">
+            action="{{ base_url }}/{{ calendar_id }}/{{ view }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task["id"] }}">
     {% else %}
         <form autocomplete="off" method="POST" onsubmit="return validate();" action="{{ base_url }}/{{ calendar_id }}/{{ view }}/new_task">
     {% endif %}
@@ -65,13 +65,13 @@
         <br/>
 
         <label for="repeats">Wiederholend</label>
-        <input type="checkbox" id="repeats" name="repeats" value="{{ task["repetition_id"] }}"
-            {% if task["repetition_id"] != "0" %}
+        <input type="checkbox" id="repeats" name="repeats" value="{{ task.get("repetition_id", "0") }}"
+            {% if task.get("repetition_id", "0") != "0" %}
                 checked="checked"
             {% endif %}
             />
         <div id="repetition_block"
-            {% if task["repetition_id"] == "0" %}
+            {% if task.get("repetition_id", "0") == "0" %}
                 class="hidden"
             {% endif %}
              >
@@ -96,7 +96,7 @@
         
         <label for="text">Trainer</label>
         <input type="email" autocomplete="off" tabindex="0" placeholder="trainer@leipziger-tennisschule.de" value="{{ task.get("coach", "") }}"
-            id="coach" name="coach" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" multiple/>
+            id="coach" name="coach" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" multiple/>
         <br/>
         
         <label for="max_participants">Max. Teilnehmer</label>
@@ -107,9 +107,11 @@
         <label for="act_participants">Aktuelle Teilnehmeranzahl</label>
         <input type="int" tabindex="0" placeholder="" value="{{ task.get("act_participants", 0) }}"
             id="act_participants" name="act_participants"/>
-        <div id="participants_block" class="hidden">
+        <div id="participants_block" {% if task.get("act_participants", 0) == 0 %}
+            class="hidden"
+        {% endif %}>
             <label for="email">Teilnehmer E-Mail Adressen:</label>
-            <input type="email" name="email" id="email" multiple="true"/>
+            <input type="email" name="email" id="email" multiple="true" value="{{participants}}"/>
         </div>
         <br/>
         
@@ -148,8 +150,31 @@
 
         <input class="form-button" type="button" value="Cancel" onclick="window.history.go(-1); return false;" />
     </div>
+    
+    <!-- The Edit Confirmation Modal -->
+    <div id="EditModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+            <label for="editObject">Wofür sollen die Änderungen vorgenommen werden?</label>
+            <select name="editObject"  id="editObject">
+              <option value="this">Nur für das gewählte Training</option>
+              <option value="series">Für alle Trainings der Serie</option>
+            </select>
+        </p>
+        <div class="modal-footer">
+          <button id="modalBtn" class="btn">OK</button>
+        </div>
+      </div>
+
+    </div>
+    <!-- End Deletion Modal -->
+    
     </form>
 
+        
 <script type="text/javascript">
     
     const editing = {% if editing %}true{% else %}false{% endif %};
@@ -301,9 +326,27 @@
                 document.getElementById("TC1").focus();
                 return false;
             }else {
-                return true;
+                if (document.getElementById("repeats").value != "0") {
+                    return modalEditConfirm();
+                }else{return true;}
             }
         };
+    
+    // Editing Modal functions
+    modalEditConfirm = function(){
+        modalEdit.style.display = "block";
+        document.getElementById("EditModal").onclick = function(EventData){
+            if (eventData.target.className == "close"){
+                modalDel.style.display = "none";
+                return false;
+            }
+            
+            if (eventData.target.id == "modalBtn"){
+                return true;
+            }
+        }
+    };
+
     
 </script>
 </body>

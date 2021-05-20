@@ -11,7 +11,7 @@
             class="button smaller remove-task"
             title="Remove task">&times;
         </a>
-        <a href="/{{ calendar_id }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
+        <a href="/{{ calendar_id }}/{{ view }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
             class="button smaller edit-task"
             title="Edit task">E
         </a>

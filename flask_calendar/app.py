@@ -29,6 +29,7 @@ from flask_calendar.actions import (
     save_task_action,
     update_task_action,
     update_task_day_action,
+    update_new_task_action,
     calendar_view_action,
     new_view_task_action,
     save_new_task_action,
@@ -135,7 +136,13 @@ def create_app(config_overrides: Dict = None):
         "/<calendar_id>/<year>/<month>/<view>/new_task", "new_view_task_action", new_view_task_action, methods=["GET"],
     )
     app.add_url_rule(
-        "/<calendar_id>/<year>/<month>/<day>/<task_id>/", "edit_task_action", edit_task_action, methods=["GET"],
+        "/<calendar_id>/<view>/<year>/<month>/<day>/<task_id>/", "edit_task_action", edit_task_action, methods=["GET"],
+    )
+    app.add_url_rule(
+        "/<calendar_id>/<view>/<year>/<month>/<day>/task/<task_id>",
+        "update_new_task_action",
+        update_new_task_action,
+        methods=["POST"],
     )
     app.add_url_rule(
         "/<calendar_id>/<year>/<month>/<day>/task/<task_id>",
