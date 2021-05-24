@@ -79,16 +79,15 @@ BUTTONS_EMOJIS_LIST = (
     "📞",
     "🍔",
     "🍺",
-    "📽️",
     "🎂",
     "🏖️",
-    "💻",
-    "📔",
-    "✂️",
-    "🚂",
-    "🏡",
-    "🐶",
-    "🐱",
+    "🎾",
+    "🥇",
+    "🥈",
+    "🥉",
+    "🚫",
+    "✅",
+    "🆓"
 )
 
 # percent of chance to do a GC-like sweep on save and clean empty and/or past hidden entries.

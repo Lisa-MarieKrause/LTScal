@@ -290,6 +290,8 @@ ul.tasks li a {
     border-top: 1px dashed #CCC;
     margin: 0;
     padding: 0 0 2px 0;
+    font-size: 8px;
+    text-align: left;
 }
 
 .hidden {
