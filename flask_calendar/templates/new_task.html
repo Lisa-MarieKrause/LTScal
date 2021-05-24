@@ -17,7 +17,7 @@
 
     {% if editing %}
         <form autocomplete="off" method="POST" onsubmit="return validate();"
-            action="{{ base_url }}/{{ calendar_id }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task.get("id") }}">
+            action="{{ base_url }}/{{ calendar_id }}/{{ view }}/{{ year }}/{{ month }}/{{ day }}/task/{{ task["id"] }}">
     {% else %}
         <form autocomplete="off" method="POST" onsubmit="return validate();" action="{{ base_url }}/{{ calendar_id }}/{{ view }}/new_task">
     {% endif %}
@@ -65,13 +65,13 @@
         <br/>
 
         <label for="repeats">Wiederholend</label>
-        <input type="checkbox" id="repeats" name="repeats" value="{{ task["repetition_id"] }}"
-            {% if task["repetition_id"] != "0" %}
+        <input type="checkbox" id="repeats" name="repeats" value="{{ task.get("repetition_id", "0") }}"
+            {% if task.get("repetition_id", "0") != "0" %}
                 checked="checked"
             {% endif %}
             />
         <div id="repetition_block"
-            {% if task["repetition_id"] == "0" %}
+            {% if task.get("repetition_id", "0") == "0" %}
                 class="hidden"
             {% endif %}
              >
@@ -89,14 +89,14 @@
             
             <label for="date_picker2" style="font-size:10px;">bis zum</label>
             <input id="date_picker2" type="date" value="{{ task.get("repetition_end_date") }}">
-            <input type="hidden" id="repetition_end_date" name="repetition_end_date" value="{{ task.get("repetition_end_date") }}" required />
+            <input type="hidden" id="repetition_end_date" name="repetition_end_date" value="{{ task.get("repetition_end_date", task["date"]) }}" required />
             <br/>
             
         </div>
         
         <label for="text">Trainer</label>
-        <input type="email" autocomplete="off" tabindex="0" placeholder="trainer@leipziger-tennisschule.de" value="{{ task.get("coach", "") }}"
-            id="coach" name="coach" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" multiple/>
+        <input type="text" autocomplete="off" tabindex="0" placeholder="" value="{{ task.get("coach", "") }}"
+            id="coach" name="coach" multiple/>
         <br/>
         
         <label for="max_participants">Max. Teilnehmer</label>
@@ -107,14 +107,21 @@
         <label for="act_participants">Aktuelle Teilnehmeranzahl</label>
         <input type="int" tabindex="0" placeholder="" value="{{ task.get("act_participants", 0) }}"
             id="act_participants" name="act_participants"/>
-        <div id="participants_block" class="hidden">
-            <label for="email">Teilnehmer E-Mail Adressen:</label>
-            <input type="email" name="email" id="email" multiple="true"/>
+        <div id="participants_block" {% if task.get("act_participants", 0) == 0 %}
+            class="hidden"
+        {% endif %}>
+            <label for="email">Teilnehmer:</label>
+            <input type="email" name="email" id="email" list="members" multiple="true" value="{{participants}}" style="width: 20em"/>
+            <datalist id="members">
+                {% for member in members %}
+                <option value="{{member["id"]~"-"~member["email_address1"]}}">{{ member["surname"] ~ " " ~ member["lastname"] }}</option>
+                {% endfor %}
+            </datalist>
         </div>
         <br/>
         
         <label for="price">Preis in €</label>
-        <input type="float" tabindex="0" placeholder="00.00" value="{{ task.get("price", "") }}"
+        <input type="float" tabindex="0" placeholder="00.00" value="{{ task.get("price", 0.00) }}"
             id="price" name="price"/>
         <br/>
 
@@ -142,26 +149,55 @@
             {% endif %}
         </div>
 
-        <input class="form-button" type="submit" value="Save" />
+        <input class="form-button" value="Save" {% if editing %}
+            type="button" data-toggle="modal" data-target="EditModal" id="submitBtn"
+        {% else %}
+            type="submit"
+        {% endif %}/>
 
         <input class="form-button" id="delete-task" type="button" value="Delete" />
 
         <input class="form-button" type="button" value="Cancel" onclick="window.history.go(-1); return false;" />
     </div>
+    
+    <!-- The Edit Confirmation Modal -->
+    <div id="EditModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+            <label for="editObject">Wofür sollen die Änderungen vorgenommen werden?</label>
+            <select name="editObject"  id="editObject">
+              <option value="this">Nur für das gewählte Training</option>
+              <option value="series">Für alle Trainings der Serie</option>
+            </select>
+        </p>
+        <div class="modal-footer">
+          <input id="modalBtn" type="submit" class="form-button" value="Update"/>
+        </div>
+      </div>
+
+    </div>
+    <!-- End Deletion Modal -->
+    
     </form>
 
+        
 <script type="text/javascript">
+    
+    //var members = {{members}};
     
     const editing = {% if editing %}true{% else %}false{% endif %};
     const currentRepetitionValue = {{ task.get("repetition_id", "0") }};
 
     if (editing === true) {
-        document.getElementById("repetition_id").value = currentRepetitionValue;
+        document.getElementById("repeats").value = currentRepetitionValue;
         if (currentRepetitionValue != "0") {
             // week days are 1-index
-            //document.getElementById("Montag").value = currentRepetitionValue;
-        }
+            //document.getElementById("Montag").value = currentRepetitionValue
         document.getElementById("date_picker2").disabled = false;
+        }
     } else {
         document.getElementById("delete-task").disabled = true;
     }
@@ -183,19 +219,23 @@
 
     window.onload = function() {
                 document.getElementById("start_time_block").className = "";
-        };
+    };
 
-        document.getElementById("start_time").onchange = function(eventData) {
+    document.getElementById("start_time").onchange = function(eventData) {
             document.getElementById("end_time").value = eventData.target.value;
-        }
+    };
 
-        document.getElementById("repeats").onclick = function(eventData) {
+    //handle check box "Wiederholend"
+    document.getElementById("repeats").onclick = function(eventData) {
+            //when clicked that training is repeatedly
             if (eventData.target.checked === true) {
                 eventData.target.value = "";
                 document.getElementById("date_picker2").disabled = false;
                 document.getElementById("repetition_block").className = "";
                 select_type_weekly();
-            }else {
+            }
+            //when clicked that training is not repeatedly
+            else {
                 eventData.target.value = "0";
                 document.getElementById("date_picker2").disabled = true;
                 document.getElementById("repetition_block").className = "hidden";
@@ -248,6 +288,14 @@
 
         document.getElementById("act_participants").onchange = function(eventData) {
             document.getElementById("participants_block").className = "";
+            var list = document.getElementById("members");
+            
+            /*for (member in members) {
+                opt = document.createElement("OPTION");
+                opt.innerHTML = member[3];
+                opt.value = member[0];
+                list.appendChild(opt);
+            }*/
             if (eventData.target.value == 0 ){
                 document.getElementById("participants_block").className = "hidden";
             }
@@ -294,16 +342,43 @@
             }
         };
 
-        function validate() {
+    //close modal button
+    var modalEdit = document.getElementById("EditModal");
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modalEdit.style.display = "none";
+    };
+    
+    //if editing mode, click submit is button and will open modal
+    if (editing === true) {
+        document.getElementById("submitBtn").onclick = function() {
+            if (validate()) {
+                document.getElementById("EditModal").style.display = "block";
+                
+            }
+        }
+    };
+
+    //validate entries
+    function validate() {
+            //return false if no court is chosen
             var court_count = document.getElementById("TC1").value + document.getElementById("TC2").value + document.getElementById("TC3").value + document.getElementById("TC4").value;
             if ( court_count == 0 ){
                 alert("Bitte einen freien Platz wählen.");
                 document.getElementById("TC1").focus();
                 return false;
-            }else {
-                return true;
-            }
+                }
+            //return false if repeating training without enddate
+            if (document.getElementById("repeats").value == "" && document.getElementById("repetition_end_date").value == ""){
+                alert("Bitte ein Enddatum eingeben.");
+                document.getElementById("repetition_end_date").focus();
+                return false;
+                }
+            //else return true
+            else{return true;}
         };
+
+
     
 </script>
 </body>

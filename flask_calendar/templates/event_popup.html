@@ -1,5 +1,11 @@
 <div class="accordion-hidden">
-    {{ task["details"] }}
+    {% for member in task["participants"] %}
+        {{ loop.index ~ ". " }}
+        {% if member["lastname"] is not none %}{{member["lastname"]}}{% endif %}
+        {% if member["surname"] is not none %}{{ ", " ~ member["surname"] ~ " "}}{% endif %}
+        {{"(" ~ member["email_address1"] ~ ")"}}
+        </br>
+    {% endfor %}
         <a href="#"
             data-id="{{ task["id"] }}"
             data-year="{{ day.year }}"
@@ -11,11 +17,8 @@
             class="button smaller remove-task"
             title="Remove task">&times;
         </a>
-        <a href="/{{ calendar_id }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
+        <a href="/{{ calendar_id }}/{{ view }}/{{ day.year }}/{{ day.month }}/{{ day.day }}/{{ task["id"] }}{% if task["repetition_id"] != "0" %}?repeats=1{% endif %}"
             class="button smaller edit-task"
             title="Edit task">E
         </a>
-    {% if task["repetition_id"] != "0" %}
-        <span class="button smaller recurrent-task" title="Recurent task">R</span>
-    {% endif %}
   </div>
