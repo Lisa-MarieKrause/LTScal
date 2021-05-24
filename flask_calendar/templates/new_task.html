@@ -114,7 +114,13 @@
             <input type="email" name="email" id="email" list="members" multiple="true" value="{{participants}}" style="width: 20em"/>
             <datalist id="members">
                 {% for member in members %}
-                <option value="{{member["id"]~"-"~member["email_address1"]}}">{{ member["surname"] ~ " " ~ member["lastname"] }}</option>
+                <option
+                    {% if member["email_address1"] == "" %}
+                        value="{{ member["id"]~"-test@test.de" }}"
+                    {% else%}
+                        value="{{member["id"]~"-" ~ member["email_address1"] }}"
+                    {% endif %}
+                    >{{ member["surname"] ~ " " ~ member["lastname"] }}</option>
                 {% endfor %}
             </datalist>
         </div>

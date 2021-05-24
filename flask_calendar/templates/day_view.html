@@ -32,29 +32,33 @@
             {% set thisHourTasks = tasks|selectattr("start_time", "equalto", hour)|list %}
             {% if thisHourTasks|length > 0 %}
               {% set total = namespace(Courts = 0) %}
+              {% set trainings = namespace(ids = []) %}
               
               <!-- TC1 -->
               {% if thisHourTasks|selectattr("TC1","equalto",1)|list|length > 0 %}
                 {% for task in thisHourTasks|selectattr("TC1","equalto",1) %}
                   {% set courts = task["TC1"]+task["TC2"]+task["TC3"]+task["TC4"] %}
                   {% set total.Courts = total.Courts + courts %}
-                  <td data-courtNo="1"
-                  class="training" id="training"
-                  rowspan="{{ task["duration"]}}"
-                  colspan="{{ courts }}"
-                  {% if task["color"] != "" %}style="background-color:{{ task["color"] }};"{%endif%}
-                  data-year="{{ day.year }}"
-                  data-month="{{ day.month }}"
-                  data-day="{{ day.day }}"
-                  data-hour="{{ hour }}"
-                  data-id="{{ task["id"] }}"
-                  >
-                  {{ task["name"] }}
-                  {% include "event_popup.html" %}
-                  </td>
+                  {% if task["id"] not in trainings.ids %}
+                      {% do trainings.ids.append(task["id"]) %}
+                      <td data-courtNo="1"
+                      class="training" id="training"
+                      rowspan="{{ task["duration"]}}"
+                      colspan="{{ courts }}"
+                      {% if task["color"] != "" %}style="background-color:{{ task["color"] }};"{%endif%}
+                      data-year="{{ day.year }}"
+                      data-month="{{ day.month }}"
+                      data-day="{{ day.day }}"
+                      data-hour="{{ hour }}"
+                      data-id="{{ task["id"] }}"
+                      >
+                      {{ task["name"] }}
+                      {% include "event_popup.html" %}
+                      </td>
+                  {% endif %}
                 {% endfor %}
               {% else %}
-                <td data-courtNo="1" data-hour="{{ hour }}">1</td>
+                <td data-courtNo="1" data-hour="{{ hour }}"></td>
               {% endif %}
               
               <!-- TC2 -->
@@ -62,6 +66,8 @@
                 {% for task in thisHourTasks|selectattr("TC2","equalto",1) %}
                   {% set courts = task["TC1"]+task["TC2"]+task["TC3"]+task["TC4"] %}
                   {% set total.Courts = total.Courts + courts %}
+                  {% if task["id"] not in trainings.ids %}
+                      {% do trainings.ids.append(task["id"]) %}
                   <td data-courtNo="2"
                   class="training" id="training"
                   rowspan="{{ task["duration"]}}"
@@ -76,12 +82,13 @@
                   {{ task["name"] }}
                   {% include "event_popup.html" %}
                   </td>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
               <!-- if totalCourts >= 2, column needs to be skipped -->
               <!-- if length == 0, empty cell -->
               {% if thisHourTasks|selectattr("TC2","equalto",1)|list|length == 0 and total.Courts < 2 %}
-                <td data-courtNo="2" data-hour="{{ hour }}">2</td>
+                <td data-courtNo="2" data-hour="{{ hour }}"></td>
               {% endif %}
               
               <!-- TC3 -->
@@ -91,6 +98,8 @@
                   {% do court_count.append(0) %}
                   {% set courts = task["TC1"]+task["TC2"]+task["TC3"]+task["TC4"] %}
                   {% set total.Courts = total.Courts + courts %}
+                  {% if task["id"] not in trainings.ids %}
+                      {% do trainings.ids.append(task["id"]) %}
                   <td data-courtNo="3"
                   class="training" id="training"
                   rowspan="{{ task["duration"]}}"
@@ -105,12 +114,13 @@
                   {{ task["name"] }}
                   {% include "event_popup.html" %}
                   </td>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
               <!-- if totalCourts >= 3, column needs to be skipped -->
               <!-- if length == 0, empty cell -->
               {% if thisHourTasks|selectattr("TC3","equalto",1)|list|length == 0 and total.Courts < 3 %}
-                <td data-courtNo="3" data-hour="{{ hour }}">3</td>
+                <td data-courtNo="3" data-hour="{{ hour }}"></td>
               {% endif %}
               
               <!-- TC4 -->
@@ -120,6 +130,8 @@
                   {% do court_count.append(0) %}
                   {% set courts = task["TC1"]+task["TC2"]+task["TC3"]+task["TC4"] %}
                   {% set total.Courts = total.Courts + courts %}
+                  {% if task["id"] not in trainings.ids %}
+                      {% do trainings.ids.append(task["id"]) %}
                   <td data-courtNo="4"
                   class="training" id="training"
                   rowspan="{{ task["duration"]}}"
@@ -134,21 +146,22 @@
                   {{ task["name"] }}
                   {% include "event_popup.html" %}
                   </td>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
               <!-- if totalCourts = 4, column needs to be skipped -->
               <!-- if length == 0, empty cell -->
               {% if thisHourTasks|selectattr("TC4","equalto",1)|list|length == 0 and total.Courts < 4 %}
-                <td data-courtNo="4" data-hour="{{ hour }}">4</td>
+                <td data-courtNo="4" data-hour="{{ hour }}"></td>
                 <script> console.log("TC4 leer ")</script>
               {% endif %}
 
             <!-- no tasks in that hour -->
             {% else %}
-              <td data-courtNo="1" data-hour="{{ hour }}">1</td>
-              <td data-courtNo="2" data-hour="{{ hour }}">2</td>
-              <td data-courtNo="3" data-hour="{{ hour }}">3</td>
-              <td data-courtNo="4" data-hour="{{ hour }}">4</td>
+              <td data-courtNo="1" data-hour="{{ hour }}"></td>
+              <td data-courtNo="2" data-hour="{{ hour }}"></td>
+              <td data-courtNo="3" data-hour="{{ hour }}"></td>
+              <td data-courtNo="4" data-hour="{{ hour }}"></td>
               
             {% endif %}
           </tr>
