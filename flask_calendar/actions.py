@@ -209,11 +209,13 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         days = [GregorianCalendar.day_date(day, month, year)]
         db = get_db()
         cur = db.execute(
-            'SELECT *,'
-            ' (CAST((JulianDay(end_time) - JulianDay(start_time)) * 24 * 60 AS INTEGER) + 1)/30 AS duration'
-            ' FROM schedule'
+            'SELECT schedule.*,'
+            ' (CAST((JulianDay(end_time) - JulianDay(start_time)) * 24 * 60 AS INTEGER) + 1)/30 AS duration,'
+            ' weatherForecast.*, '
+            ' strftime("%Y-%m-%d %H:%M", datetime(weatherForecast.startTime, "localtime")) AS weather_datetime'
+            ' FROM schedule LEFT JOIN weatherForecast ON strftime("%Y-%m-%d %H:%M", datetime(weatherForecast.startTime, "localtime"))=strftime("%Y-%m-%d %H:%M", (schedule.date || schedule.start_time))'
             ' WHERE date IN ("{}") AND cancelled_at is null;'.format(days[0].strftime('%Y-%m-%d'))
-        ) #*2 because of half hours intervals
+        )
         rows = cur.fetchall()
         tasks = [dict(row) for row in rows]
         for task in tasks:
