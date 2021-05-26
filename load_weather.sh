@@ -24,7 +24,7 @@ convert: scrape
 
 load: convert
 	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd ".mode csv" ".import weather_fc_hours.csv weatherTemp"
-	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd "INSERT INTO weatherForecast (startTime,temperature, precipitationProbability,precipitationIntensity,windSpeed, cloudCover, weatherCode) SELECT * FROM weatherTemp;" "DROP TABLE weatherTemp;"
+	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd "REPLACE INTO weatherForecast (startTime,temperature, precipitationProbability,precipitationIntensity,windSpeed, cloudCover, weatherCode) SELECT * FROM weatherTemp;" "DROP TABLE weatherTemp;"
 
 clean: scrape convert
 	rm scrape

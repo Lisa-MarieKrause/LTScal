@@ -62,8 +62,7 @@ CREATE TABLE lesson (
 );
 
 CREATE TABLE weatherForecast (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  startTime DATETIME,
+  startTime DATETIME PRIMARY KEY,
   temperature DECIMAL,
   precipitationProbability DECIMAL,
   precipitationIntensity DECIMAL,
