@@ -13,10 +13,7 @@ import hmac # Securing the webhook
 import hashlib # Securing the webhook
 from typing import Dict
 import config  # noqa: F401
-logging.debug( ': loaded config')
-logging.debug('now trying to load flask')
 import flask
-logging.debug('imported flask')
 from flask_calendar.actions import (
     delete_task_action,
     do_login_action,
@@ -42,6 +39,7 @@ from flask_calendar.app_utils import (
     calendar_span,
     training_participants
 )
+from flask_calendar.invoice import (create_all_invoices, create_invoice)
 
 def instance_def():
     if platform.system() == 'Linux':
@@ -179,6 +177,8 @@ def create_app(config_overrides: Dict = None):
     
     app.add_url_rule(
         "/update_member", "update_member_action", update_member_action, methods=["POST", "GET"],)
+    app.add_url_rule("/invoices/<month>", "create_all_invoices", create_all_invoices, methods=["GET"],)
+    app.add_url_rule("/invoices/<month>/<member_id>", "create_invoice", create_invoice, methods=["GET"],)
     
     # setting jinja filters for in-html-usage
     app.jinja_env.add_extension('jinja2.ext.do')
