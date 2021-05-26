@@ -61,3 +61,14 @@ CREATE TABLE lesson (
   FOREIGN KEY (participant_id) REFERENCES member (id)
 );
 
+CREATE TABLE weatherForecast (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  startTime DATETIME,
+  temperature DECIMAL,
+  precipitationProbability DECIMAL,
+  precipitationIntensity DECIMAL,
+  windSpeed DECIMAL,
+  cloudCover DECIMAL,
+  weatherCode INTEGER,
+  Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);

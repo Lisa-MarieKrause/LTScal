@@ -10,6 +10,8 @@ USERS_DATA_FOLDER = "users"
 # path of gcp key json file
 GCP_KEYFILE = os.getenv("GCP_KEYFILE")
 MEMBER_DATA = 'LTS_Mitglieder' #file name of google spreadsheet (Kundenkartei)
+INVOICE_TEMPLATE = 'LTS_Rechnungsvorlage' #template for invoices
+INVOICE_FOLDER = '11IRdU324nu_hqwcGGk8ORWifRmRLB6ao' #folder_id where to save invoices
 
 if platform.system() == 'Linux':
     BASE_URL = "http://lii544.pythonanywhere.com"
