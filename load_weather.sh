@@ -1,11 +1,11 @@
 #!/bin/sh
 
 
-.PHONY: all clean
+.PHONY: all
 
 SHELL := bash
 
-all: scrape convert load
+all: scrape convert load clean
 
 scrape:
 	curl --request GET --url https://api.tomorrow.io/v4/timelines -G \
@@ -26,9 +26,12 @@ load: convert
 	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd ".mode csv" ".import weather_fc_hours.csv weatherTemp"
 	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd "REPLACE INTO weatherForecast (startTime,temperature, precipitationProbability,precipitationIntensity,windSpeed, cloudCover, weatherCode) SELECT * FROM weatherTemp;" "DROP TABLE weatherTemp;"
 
-clean: scrape convert
+	touch $@
+
+clean: load
 	rm scrape
 	rm convert
+	rm load
 	rm weather_fc_hours.json
 	rm weather_fc_hours.csv
 
