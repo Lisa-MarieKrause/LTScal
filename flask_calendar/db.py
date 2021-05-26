@@ -41,6 +41,7 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+#export FLASK_APP=/path/to/flask_calendar/app:app
 @click.command('load-members')
 @with_appcontext
 def load_gspread_member():
