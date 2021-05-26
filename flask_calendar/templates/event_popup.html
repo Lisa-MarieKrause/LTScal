@@ -6,6 +6,15 @@
         {{"(" ~ member["email_address1"] ~ ")"}}
         </br>
     {% endfor %}
+    {% if task.get("temperature") is not none %}
+        Wettervorhersage:
+        </br>
+        {{ task.get("temperature") ~ " C, " ~
+        task.get("precipitationProbability") ~ " % Regenwahrscheinlichkeit, " ~
+        task.get("windSpeed") ~ " m/s Windgeschwindigkeit, " ~
+        task.get("cloudCover") ~ " % bedeckter Himmel"
+        }}
+    {% endif %}
         <a href="#"
             data-id="{{ task["id"] }}"
             data-year="{{ day.year }}"
