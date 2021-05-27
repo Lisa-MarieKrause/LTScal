@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS schedule;
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS lesson;
+DROP TABLE IF EXISTS weatherForecast;
 DROP VIEW IF EXISTS invoice;
 
 CREATE TABLE schedule (
