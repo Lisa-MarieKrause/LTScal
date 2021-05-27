@@ -149,8 +149,8 @@ def main_calendar_action(calendar_id: str) -> Response:
         ),
     )
 
-#@authenticated
-#@authorized
+@authenticated
+@authorized
 def calendar_view_action(calendar_id: str, view: str) -> Response:
     logging.debug("starting calendar_view_action ...")
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])

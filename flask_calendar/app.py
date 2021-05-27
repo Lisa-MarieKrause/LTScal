@@ -105,7 +105,7 @@ def create_app(config_overrides: Dict = None):
             
     # TODO: think about a solution how to split between public and coach
     def index():
-        return flask.redirect("/sample/week")
+        return flask.redirect("/sample/day")
     # To avoid main_calendar_action below shallowing favicon requests and generating error logs
     @app.route("/favicon.ico")
     def favicon():
