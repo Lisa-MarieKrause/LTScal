@@ -100,4 +100,4 @@ WITH inv_temp AS (
     )
  SELECT *, DATE(last_date,"+1 months","weekday 1") AS inv_due_date
  FROM inv_stage
-/* invoice(member_id,name,name2,street,zip_code,city,inv_month,date,price,coach,description,inv_id,last_date,inv_due_date) */;
+;
