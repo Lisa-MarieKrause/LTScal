@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS schedule;
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS lesson;
+DELETE VIEW IF EXISTS invoice;
 
 CREATE TABLE schedule (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,3 +72,32 @@ CREATE TABLE weatherForecast (
   weatherCode INTEGER,
   Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE VIEW invoice AS
+
+WITH inv_temp AS (
+   SELECT
+      member.id AS member_id,
+      IIF(kid_status, lastname_parent || ", " || surname_parent, lastname || ", " || surname) AS name,
+      IIF(kid_status, lastname || ", " || surname, "") AS name2,
+      street,
+      zip_code,
+      city,
+      CAST(strftime("%m", date) AS INTEGER) AS inv_month,
+      schedule.date AS date,
+      schedule.price AS price,
+      schedule.coach AS coach,
+      schedule.name AS description
+     FROM schedule
+     JOIN lesson ON schedule.id = lesson.schedule_id
+     JOIN member ON lesson.participant_id = member.id
+     ),
+    inv_stage AS (
+    SELECT *,
+    (CAST(member_id AS TEXT) || "-" || CAST(inv_month AS TEXT)) AS inv_id,
+    MAX(date) OVER (PARTITION BY inv_month ORDER BY member_id ) AS last_date
+    FROM inv_temp
+    )
+ SELECT *, DATE(last_date,"+1 months","weekday 1") AS inv_due_date
+ FROM inv_stage
+/* invoice(member_id,name,name2,street,zip_code,city,inv_month,date,price,coach,description,inv_id,last_date,inv_due_date) */;
