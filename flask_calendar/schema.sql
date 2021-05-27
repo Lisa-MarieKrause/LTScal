@@ -75,12 +75,11 @@ CREATE TABLE weatherForecast (
 );
 
 CREATE VIEW invoice AS
-
-WITH inv_temp AS (
-   SELECT
+  WITH inv_temp AS (
+    SELECT
       member.id AS member_id,
-      IIF(kid_status, lastname_parent || ", " || surname_parent, lastname || ", " || surname) AS name,
-      IIF(kid_status, lastname || ", " || surname, "") AS name2,
+      CASE WHEN kid_status THEN lastname_parent || ", " || surname_parent ELSE lastname || ", " || surname END AS name,
+      CASE WHEN kid_status THEN lastname || ", " || surname ELSE "" END AS name2,
       street,
       zip_code,
       city,
@@ -95,10 +94,9 @@ WITH inv_temp AS (
      ),
     inv_stage AS (
     SELECT *,
-    (CAST(member_id AS TEXT) || "-" || CAST(inv_month AS TEXT)) AS inv_id,
-    MAX(date) OVER (PARTITION BY inv_month ORDER BY member_id ) AS last_date
+    (CAST(member_id AS TEXT) || "-" || CAST(inv_month AS TEXT)) AS inv_id
     FROM inv_temp
     )
- SELECT *, DATE(last_date,"+1 months","weekday 1") AS inv_due_date
+ SELECT *, DATE(date,"+1 months","weekday 1") AS inv_due_date
  FROM inv_stage
 ;
