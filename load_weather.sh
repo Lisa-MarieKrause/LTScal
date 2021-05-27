@@ -23,6 +23,7 @@ convert: scrape
 	touch $@
 
 load: convert
+	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd "CREATE TABLE weatherTemp (startTime DATETIME,temperature DECIMAL, precipitationProbability DECIMAL,precipitationIntensity DECIMAL,windSpeed DECIMAL, cloudCover DECIMAL, weatherCode INTEGER);" ".exit"
 	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd ".mode csv" ".import weather_fc_hours.csv weatherTemp"
 	/usr/bin/sqlite3 ./instance/LTS.sqlite -cmd "REPLACE INTO weatherForecast (startTime,temperature, precipitationProbability,precipitationIntensity,windSpeed, cloudCover, weatherCode) SELECT * FROM weatherTemp;" "DROP TABLE weatherTemp;"
 
