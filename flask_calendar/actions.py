@@ -90,8 +90,8 @@ def do_login_action() -> Response:
     else:
         return redirect("/login")
 
-#@authenticated
-#@authorized
+@authenticated
+@authorized
 def main_calendar_action(calendar_id: str) -> Response:
     logging.debug("starting main_calendar_action: %s", calendar_id)
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
@@ -227,7 +227,7 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
             rows = cur.fetchall()
             participants = [dict(row) for row in rows]
             task["participants"]=participants
-        cur.close()
+        #cur.close()
     else:
         days=GregorianCalendar.month_days(year, month)
         
@@ -257,7 +257,8 @@ def calendar_view_action(calendar_id: str, view: str) -> Response:
         ),
     )
 
-
+@authenticated
+@authorized
 def new_view_task_action(calendar_id: str, year: int, month: int, view: str) -> Response:
     GregorianCalendar.setfirstweekday(current_app.config["WEEK_STARTING_DAY"])
 
@@ -376,8 +377,8 @@ def new_task_action(calendar_id: str, year: int, month: int) -> Response:
     )
 
 
-#@authenticated
-#@authorized
+@authenticated
+@authorized
 def edit_task_action(calendar_id: str, view: str, year: int, month: int, day: int, task_id: int) -> Response:
     month_names = GregorianCalendar.MONTH_NAMES
     calendar_data = CalendarData(current_app.config["DATA_FOLDER"], current_app.config["WEEK_STARTING_DAY"])
@@ -421,7 +422,7 @@ def edit_task_action(calendar_id: str, view: str, year: int, month: int, day: in
         if not rows is None:
             participants = participants[:-1]
             
-        cur.close()
+        #cur.close()
         
     emojis_enabled = current_app.config.get("EMOJIS_ENABLED", False)
     
@@ -433,7 +434,7 @@ def edit_task_action(calendar_id: str, view: str, year: int, month: int, day: in
     )
     rows = cur.fetchall()
     members = [dict(row) for row in rows]
-    cur.close()
+    #cur.close()
     
     return cast(
         Response,
