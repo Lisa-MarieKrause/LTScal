@@ -6,4 +6,5 @@ gitpython
 #gspread oauth2client
 python-dotenv
 hmac
-hashlib
+#hashlib
+pytest
