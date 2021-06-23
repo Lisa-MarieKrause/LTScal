@@ -53,24 +53,25 @@ def create_app(config_overrides: Dict = None):
     app = flask.Flask(__name__, instance_path = instance_def())
             
     app.config.from_object("config")
-
+    
+    if app.config["LOCALE"] is not None:
+        try:
+            locale.setlocale(locale.LC_ALL, app.config["LOCALE"])
+        except locale.Error as e:
+            app.logger.warning("{} ({})".format(str(e), app.config["LOCALE"]))
+    
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
 
-    if config_overrides is not None:
-        app.config.from_mapping(config_overrides)
-
-    if app.config["LOCALE"] is not None:
-        try:
-            locale.setlocale(locale.LC_ALL, app.config["LOCALE"])
-        except locale.Error as e:
-            app.logger.warning("{} ({})".format(str(e), app.config["LOCALE"]))
-
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.config['DATABASE']=os.path.join(app.instance_path, 'LTS.sqlite')
+    
+    if config_overrides is not None:
+        #load the test config if passed in
+        app.config.update(config_overrides)
 
     # route configuration for receiving information from GitHub
     def is_valid_signature(x_hub_signature, data, private_key):
